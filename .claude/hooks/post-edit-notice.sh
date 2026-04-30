@@ -18,10 +18,11 @@ if [[ -z "${path}" ]]; then
 fi
 
 case "${path}" in
-  *docs/00-requirements/*|*docs/10-basic-design/*|*docs/20-detail-design/*|*docs/30-implementation-plan/*)
+  *docs/00-discovery/*|*docs/01-requirement-refinement/*|*docs/02-requirements/*|*docs/10-basic-design/*|*docs/20-detail-design/*|*docs/30-implementation-plan/*|*docs/40-verification/*)
     cat >&2 <<'EOM'
-[viaduction] 設計ドキュメントが更新されました。
+[viaduction] 要件・設計ドキュメントが更新されました。
   → 完了前に `/trace-check` または `npx tsx scripts/validate-traceability.ts` を実行してトレーサビリティを再確認してください。
+  → 要件 (REQ/RC) の status を変更した場合は、Acceptance Criteria と Open Questions の整合も再確認してください。
 EOM
     ;;
 esac

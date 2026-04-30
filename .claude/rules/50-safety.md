@@ -21,7 +21,23 @@
 - `git add`, `git commit`, `git push`
 - `gh pr ...`, `gh issue ...`
 - `npm install`, `pnpm install`, `yarn install`（依存追加は要件・基本設計の決定が前提）
-- `docs/00-requirements/**` への書き込み・編集（要件は人間が起点）
+- `docs/02-requirements/**` への書き込み・編集（正式要件は人間が起点）
+
+## 要件ステータスの遷移ルール
+
+- **`### Status: approved` を Claude が押してはならない**。`/specify-requirements` は `candidate` までで止め、人間に確認を求める。
+- **`### Status: verified` を Claude が押してはならない**。検証完了の判断は人間が行う。
+- `### Acceptance Criteria` が空の REQ を `approved` にしてはならない（バリデーションで error）。
+- `### Open Questions` セクションに未解消項目が残っている REQ を `approved` にしてはならない（バリデーションで error）。
+- `RC-XXX` を直接 TASK の参照対象にしてはならない（`approved` の `REQ-XXX` を経由する）。
+
+## レビュア系 Subagent の権限ハードニング
+
+`ambiguity-reviewer`, `scope-reviewer`, `business-rule-reviewer`, `non-functional-requirement-reviewer`, `acceptance-criteria-reviewer`, `design-reviewer`, `traceability-auditor` はすべて以下を順守：
+
+- `tools:` に `Write` `Edit` `NotebookEdit` を **絶対に含めない**
+- 「修正しました」と回答しない（修正案を提示するのみ）
+- ファイルを開かずに憶測で指摘しない
 
 確認テンプレ：
 

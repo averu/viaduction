@@ -57,5 +57,5 @@ updated: 2026-04-30
 
 ## 参照
 
-- 上流: `docs/00-requirements/requirements.md` の NFR-XXX
+- 上流: `docs/02-requirements/requirements.md` の NFR-XXX
 - 下流: アーキテクチャ、API、画面、DB の各設計

@@ -2,11 +2,11 @@
 /**
  * scripts/validate-traceability.ts
  *
- * REQ / NFR / UC / SCR / API / DB / TASK / TEST のトレーサビリティを検証する。
+ * IDEA / PROB / RC / REQ / NFR / UC / SCR / API / DB / TASK / TEST のトレーサビリティを検証する。
  *
  * 使い方:
  *   npx tsx scripts/validate-traceability.ts             検証のみ
- *   npx tsx scripts/validate-traceability.ts --emit      99-traceability.md を再生成
+ *   npx tsx scripts/validate-traceability.ts --emit      99-traceability.md / traceability-seed.md を再生成
  *   npx tsx scripts/validate-traceability.ts --json      JSON 出力 (CI 連携用)
  *   npx tsx scripts/validate-traceability.ts --verbose   詳細ログ
  *
@@ -28,9 +28,33 @@ const VERBOSE = argv.includes("--verbose");
 const PROJECT_ROOT = resolve(process.cwd());
 const DOCS_ROOT = resolve(PROJECT_ROOT, process.env.VIADUCTION_DOCS_ROOT ?? "docs");
 const ID_RE = /\b([A-Z]+)-(\d{3,})\b/g;
-const PREFIXES = ["REQ", "NFR", "UC", "SCR", "API", "DB", "TASK", "TEST"] as const;
+const PREFIXES = [
+  "IDEA",
+  "PROB",
+  "RC",
+  "REQ",
+  "NFR",
+  "UC",
+  "SCR",
+  "API",
+  "DB",
+  "TASK",
+  "TEST",
+] as const;
 const PREFIX_SET = new Set<string>(PREFIXES);
 type Prefix = (typeof PREFIXES)[number];
+
+/** 要件/RC のステータス値（順序や意味は rules/10-traceability.md と同期させる）。 */
+const VALID_STATUSES = new Set([
+  "candidate",
+  "needs-clarification",
+  "refined",
+  "approved",
+  "implemented",
+  "verified",
+  "deferred",
+  "rejected",
+]);
 
 // ---------- 型 ----------
 
@@ -61,6 +85,18 @@ interface Index {
   refs: Map<string, Occurrence[]>;
   byFile: Map<string, FileParse>;
   filesByPrefix: Map<Prefix, Set<string>>;
+  sections: SectionState[];
+}
+
+/** ID で区切られたセクションごとの状態（### Status / ### Acceptance Criteria / ### Open Questions）。 */
+interface SectionState {
+  id: string;
+  prefix: Prefix;
+  file: string;
+  line: number;
+  status?: string;
+  acceptanceCriteria?: string;
+  openQuestions?: string;
 }
 
 // ---------- ファイル走査 ----------
@@ -207,9 +243,134 @@ function parseFile(file: string): FileParse {
   return { file, defines, references: filteredRefs };
 }
 
+// ---------- セクション (status / AC / OQ) のパース ----------
+
+function parseFileSections(file: string): SectionState[] {
+  const content = readFileSync(file, "utf8");
+  const lines = content.split("\n");
+  const sections: SectionState[] = [];
+
+  let fmEnd = -1;
+  if (lines[0]?.trim() === "---") {
+    for (let i = 1; i < lines.length; i++) {
+      if (lines[i].trim() === "---") {
+        fmEnd = i;
+        break;
+      }
+    }
+  }
+
+  let inFence = false;
+  let inAuto = false;
+  let current: SectionState | null = null;
+  let currentSub: "status" | "ac" | "oq" | null = null;
+  let buf: string[] = [];
+
+  function flushSub() {
+    if (!current || !currentSub) return;
+    const body = buf.join("\n").trim();
+    if (currentSub === "status") {
+      // ステータス値は最初の非空行を採用
+      const first = body.split("\n").find((l) => l.trim() !== "")?.trim() ?? "";
+      current.status = first;
+    } else if (currentSub === "ac") {
+      current.acceptanceCriteria = body;
+    } else if (currentSub === "oq") {
+      current.openQuestions = body;
+    }
+    buf = [];
+    currentSub = null;
+  }
+
+  function flushSection() {
+    if (current) {
+      flushSub();
+      sections.push(current);
+      current = null;
+    }
+  }
+
+  for (let i = Math.max(0, fmEnd + 1); i < lines.length; i++) {
+    const line = lines[i];
+
+    if (/^\s*```/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+
+    if (/<!--\s*TRACE:.*:START\s*-->/.test(line)) {
+      inAuto = true;
+      continue;
+    }
+    if (/<!--\s*TRACE:.*:END\s*-->/.test(line)) {
+      inAuto = false;
+      continue;
+    }
+    if (inAuto) continue;
+
+    // ## <PREFIX>-NNN[:|空白|—|--|―] でセクション開始
+    const h2Id = line.match(/^##\s+([A-Z]+-\d{3,})\b/);
+    if (h2Id) {
+      flushSection();
+      const id = h2Id[1];
+      const prefix = id.split("-")[0];
+      // 状態管理対象は要件系のみ（RC / REQ / NFR）
+      if (PREFIX_SET.has(prefix) && (prefix === "RC" || prefix === "REQ" || prefix === "NFR")) {
+        current = { id, prefix: prefix as Prefix, file, line: i + 1 };
+      }
+      continue;
+    }
+
+    // 別の ## 見出しはセクション終端
+    if (/^##\s+/.test(line)) {
+      flushSection();
+      continue;
+    }
+
+    // ### サブセクション
+    const h3 = line.match(/^###\s+(.+?)\s*$/);
+    if (h3 && current) {
+      flushSub();
+      const title = h3[1].trim();
+      if (title === "Status") currentSub = "status";
+      else if (title === "Acceptance Criteria" || title === "Acceptance Criteria Draft")
+        currentSub = "ac";
+      else if (title === "Open Questions" || title === "Ambiguities") currentSub = "oq";
+      else currentSub = null;
+      continue;
+    }
+
+    if (current && currentSub) {
+      buf.push(line);
+    }
+  }
+  flushSection();
+  return sections;
+}
+
+function isOpenQuestionsEmpty(body?: string): boolean {
+  if (!body) return true;
+  const t = body.trim();
+  if (t === "") return true;
+  // 「(なし)」「- (なし)」「- なし」を空扱い
+  if (/^[-*]?\s*\(?\s*なし\s*\)?\s*$/m.test(t) && t.split("\n").every((l) => /^[-*]?\s*\(?\s*なし\s*\)?\s*$/.test(l.trim()) || l.trim() === ""))
+    return true;
+  return false;
+}
+
+function isAcceptanceCriteriaEmpty(body?: string): boolean {
+  if (!body) return true;
+  const t = body.trim();
+  if (t === "") return true;
+  // プレースホルダ「(空)」「-」のみは空扱い
+  if (/^[-*]?\s*\(?\s*(空|なし|TBD|tbd)\s*\)?\s*$/.test(t)) return true;
+  return false;
+}
+
 // ---------- インデックス構築 ----------
 
-function buildIndex(parses: FileParse[]): Index {
+function buildIndex(parses: FileParse[], sections: SectionState[]): Index {
   const defs = new Map<string, Occurrence[]>();
   const refs = new Map<string, Occurrence[]>();
   const byFile = new Map<string, FileParse>();
@@ -231,7 +392,7 @@ function buildIndex(parses: FileParse[]): Index {
     }
   }
 
-  return { defs, refs, byFile, filesByPrefix };
+  return { defs, refs, byFile, filesByPrefix, sections };
 }
 
 // ---------- 検証 ----------
@@ -345,6 +506,89 @@ function check(index: Index): Issue[] {
         file: occs[0].file,
         line: occs[0].line,
       });
+    }
+  }
+
+  // 8. TASK が RC を直接参照 (error: RC は実装対象にしない)
+  const taskFiles = filesByPrefix.get("TASK")!;
+  for (const [id, occs] of refs) {
+    if (!id.startsWith("RC-")) continue;
+    for (const occ of occs) {
+      if (taskFiles.has(occ.file)) {
+        issues.push({
+          severity: "error",
+          code: "TASK_REFS_RC",
+          message: `TASK 定義ファイルが ${id} を参照しています。RC ではなく approved 済みの REQ を参照してください`,
+          file: occ.file,
+          line: occ.line,
+        });
+      }
+    }
+  }
+
+  // セクション情報からの検査 (REQ / NFR の status / AC / OQ)
+  const reqStatusMap = new Map<string, string>();
+  for (const sec of index.sections) {
+    if (sec.prefix === "REQ" || sec.prefix === "NFR") {
+      if (sec.status) reqStatusMap.set(sec.id, sec.status);
+    }
+  }
+
+  for (const sec of index.sections) {
+    // 9. status の値が定義済セットに含まれるか (warn)
+    if (sec.status && !VALID_STATUSES.has(sec.status)) {
+      issues.push({
+        severity: "warn",
+        code: "INVALID_STATUS",
+        message: `${sec.id} の Status="${sec.status}" は未定義の値です`,
+        file: sec.file,
+        line: sec.line,
+      });
+    }
+
+    // 10. status=approved で AC が空 (error)
+    if (sec.status === "approved" && (sec.prefix === "REQ" || sec.prefix === "NFR")) {
+      if (isAcceptanceCriteriaEmpty(sec.acceptanceCriteria)) {
+        issues.push({
+          severity: "error",
+          code: "APPROVED_NO_AC",
+          message: `${sec.id} は status=approved だが Acceptance Criteria が空です`,
+          file: sec.file,
+          line: sec.line,
+        });
+      }
+    }
+
+    // 11. status=approved で Open Questions が残っている (error)
+    if (sec.status === "approved" && (sec.prefix === "REQ" || sec.prefix === "NFR")) {
+      if (!isOpenQuestionsEmpty(sec.openQuestions)) {
+        issues.push({
+          severity: "error",
+          code: "APPROVED_HAS_OQ",
+          message: `${sec.id} は status=approved だが Open Questions が残っています`,
+          file: sec.file,
+          line: sec.line,
+        });
+      }
+    }
+  }
+
+  // 12. TASK が approved 以外の REQ を参照 (warn)
+  for (const [id, occs] of refs) {
+    if (!id.startsWith("REQ-")) continue;
+    const status = reqStatusMap.get(id);
+    if (!status) continue; // status 未取得の REQ はチェック対象外
+    if (status === "approved" || status === "implemented" || status === "verified") continue;
+    for (const occ of occs) {
+      if (taskFiles.has(occ.file)) {
+        issues.push({
+          severity: "warn",
+          code: "TASK_REFS_NON_APPROVED_REQ",
+          message: `TASK が ${id} (status=${status}) を参照しています。approved になるまで実装着手しないでください`,
+          file: occ.file,
+          line: occ.line,
+        });
+      }
     }
   }
 
@@ -531,9 +775,102 @@ function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function emit(index: Index): { changed: string[] } {
+/** 要件フェーズの集計（02-requirements/traceability-seed.md 用）。 */
+interface RequirementSummary {
+  ideaToReq: string[][];
+  rcStatus: string[][];
+  reqStatus: string[][];
+  checks: string[];
+}
+
+function buildRequirementSummary(index: Index, issues: Issue[]): RequirementSummary {
+  // IDEA → PROB → RC → REQ の連鎖を簡易に組み立てる。
+  // 「RC が IDEA を参照」「RC が PROB を参照」「REQ が RC を参照」を辿る。
+  const rcIds = definedIdsByPrefix(index, "RC");
+  const reqIds = definedIdsByPrefix(index, "REQ");
+
+  // RC が参照する IDEA / PROB を、RC の定義ファイル内の references から拾う。
+  const rcUpstream = new Map<string, { ideas: Set<string>; probs: Set<string> }>();
+  for (const rc of rcIds) {
+    const ideas = new Set<string>();
+    const probs = new Set<string>();
+    for (const o of index.defs.get(rc) ?? []) {
+      const fp = index.byFile.get(o.file);
+      if (!fp) continue;
+      // RC 定義行の周辺に書かれた IDEA/PROB を採用するため、同ファイルの全 reference を入れる
+      for (const r of fp.references) {
+        if (r.prefix === "IDEA") ideas.add(r.id);
+        if (r.prefix === "PROB") probs.add(r.id);
+      }
+    }
+    rcUpstream.set(rc, { ideas, probs });
+  }
+
+  // REQ が参照する RC
+  const reqToRc = new Map<string, Set<string>>();
+  for (const req of reqIds) {
+    const set = new Set<string>();
+    for (const o of index.defs.get(req) ?? []) {
+      const fp = index.byFile.get(o.file);
+      if (!fp) continue;
+      for (const r of fp.references) {
+        if (r.prefix === "RC") set.add(r.id);
+      }
+    }
+    reqToRc.set(req, set);
+  }
+
+  // ideaToReq 表: RC 単位で 1 行ずつ
+  const ideaToReq: string[][] = [];
+  for (const rc of rcIds) {
+    const upstream = rcUpstream.get(rc) ?? { ideas: new Set(), probs: new Set() };
+    const downstream = [...reqIds].filter((req) => reqToRc.get(req)?.has(rc));
+    ideaToReq.push([
+      [...upstream.ideas].sort().join(", ") || "-",
+      [...upstream.probs].sort().join(", ") || "-",
+      rc,
+      downstream.sort().join(", ") || "-",
+    ]);
+  }
+
+  // ステータス分布
+  function statusDist(prefix: "RC" | "REQ"): string[][] {
+    const buckets = new Map<string, string[]>();
+    for (const sec of index.sections) {
+      if (sec.prefix !== prefix) continue;
+      const key = sec.status ?? "(unset)";
+      const list = buckets.get(key) ?? [];
+      list.push(sec.id);
+      buckets.set(key, list);
+    }
+    const out: string[][] = [];
+    for (const [status, ids] of [...buckets].sort()) {
+      out.push([status, ids.sort().join(", ")]);
+    }
+    return out;
+  }
+
+  const errors = issues.filter((i) => i.severity === "error").length;
+  const warnings = issues.filter((i) => i.severity === "warn").length;
+  const checks = [
+    `- 検査時刻: ${new Date().toISOString()}`,
+    `- 定義 ID 数: ${index.defs.size}`,
+    `- IDEA: ${definedIdsByPrefix(index, "IDEA").length}, PROB: ${definedIdsByPrefix(index, "PROB").length}, RC: ${rcIds.length}, REQ: ${reqIds.length}`,
+    `- Errors: ${errors}, Warnings: ${warnings}`,
+  ];
+
+  return {
+    ideaToReq,
+    rcStatus: statusDist("RC"),
+    reqStatus: statusDist("REQ"),
+    checks,
+  };
+}
+
+function emit(index: Index, issues: Issue[]): { changed: string[] } {
   const basic = buildBasicSummary(index);
   const detail = buildDetailSummary(index);
+  const reqSummary = buildRequirementSummary(index, issues);
   const changed: string[] = [];
 
   const basicTrace = resolve(DOCS_ROOT, "10-basic-design/99-traceability.md");
@@ -592,6 +929,39 @@ function emit(index: Index): { changed: string[] } {
     /* ファイルが無ければスキップ */
   }
 
+  // 02-requirements/traceability-seed.md
+  const seed = resolve(DOCS_ROOT, "02-requirements/traceability-seed.md");
+  try {
+    let content = readFileSync(seed, "utf8");
+    const before = content;
+    content = replaceBlock(
+      content,
+      "REQ_SEED:IDEA_TO_REQ",
+      emitTable(reqSummary.ideaToReq, ["IDEA", "PROB", "RC", "REQ"]),
+    );
+    content = replaceBlock(
+      content,
+      "REQ_SEED:RC_STATUS",
+      emitTable(reqSummary.rcStatus, ["Status", "RC IDs"]),
+    );
+    content = replaceBlock(
+      content,
+      "REQ_SEED:REQ_STATUS",
+      emitTable(reqSummary.reqStatus, ["Status", "REQ IDs"]),
+    );
+    content = replaceBlock(
+      content,
+      "REQ_SEED:CHECKS",
+      reqSummary.checks.join("\n"),
+    );
+    if (content !== before) {
+      writeFileSync(seed, content);
+      changed.push(seed);
+    }
+  } catch {
+    /* ファイルが無ければスキップ */
+  }
+
   return { changed };
 }
 
@@ -637,7 +1007,7 @@ function reportText(index: Index, issues: Issue[], emittedFiles: string[]): stri
   }
 
   if (EMIT) {
-    lines.push("■ 99-traceability.md");
+    lines.push("■ 自動生成テーブル (99-traceability.md / traceability-seed.md)");
     if (emittedFiles.length === 0) {
       lines.push("  変更なし");
     } else {
@@ -666,9 +1036,10 @@ function main(): never {
   }
 
   const parses = files.map(parseFile);
-  const index = buildIndex(parses);
+  const sections = files.flatMap(parseFileSections);
+  const index = buildIndex(parses, sections);
   const issues = check(index);
-  const emittedFiles = EMIT ? emit(index).changed : [];
+  const emittedFiles = EMIT ? emit(index, issues).changed : [];
 
   if (JSON_OUT) {
     const payload = {

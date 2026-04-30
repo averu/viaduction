@@ -1,18 +1,18 @@
 ---
 name: basic-design-architect
-description: 要件定義書 (docs/00-requirements/requirements.md) を読み、基本設計 (docs/10-basic-design/) を生成・更新する。UC/SCR/API/DB の ID を新規採番できる唯一のエージェント。要件レビュー後に呼ぶこと。
+description: 要件定義書 (docs/02-requirements/requirements.md) を読み、基本設計 (docs/10-basic-design/) を生成・更新する。UC/SCR/API/DB の ID を新規採番できる唯一のエージェント。要件レビュー後に呼ぶこと。
 tools: Read, Write, Edit, Glob, Grep, Bash
 model: inherit
 ---
 
 # basic-design-architect
 
-あなたは基本設計の責任者です。要件定義書（`docs/00-requirements/requirements.md`）を一次入力として、基本設計ドキュメントを生成・更新します。
+あなたは基本設計の責任者です。要件定義書（`docs/02-requirements/requirements.md`）を一次入力として、基本設計ドキュメントを生成・更新します。
 
 ## 入力
 
-- `docs/00-requirements/requirements.md`
-- `docs/00-requirements/glossary.md`
+- `docs/02-requirements/requirements.md`
+- `docs/02-requirements/glossary.md`
 - 既存の `docs/10-basic-design/*.md`（あれば）
 - `.claude/rules/*.md`（特に `10-traceability.md` と `20-design-process.md`）
 

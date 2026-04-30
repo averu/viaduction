@@ -1,6 +1,6 @@
 # 基本設計 (Phase 1)
 
-`docs/00-requirements/requirements.md` を入力に、システム全体像を描くフェーズの成果物を置く。
+`docs/02-requirements/requirements.md` を入力に、システム全体像を描くフェーズの成果物を置く。
 
 ## 構成
 
@@ -24,4 +24,4 @@
 ## 注意
 
 - 詳細レベル（カラム型、画面項目バリデーション、JSON スキーマ）はここでは書かない。詳細設計の責務。
-- 用語は `docs/00-requirements/glossary.md` に従う。
+- 用語は `docs/02-requirements/glossary.md` に従う。

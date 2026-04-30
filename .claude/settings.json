@@ -33,8 +33,10 @@
       "Bash(npm install:*)",
       "Bash(pnpm install:*)",
       "Bash(yarn install:*)",
-      "Write(docs/00-requirements/**)",
-      "Edit(docs/00-requirements/**)"
+      "Write(docs/02-requirements/**)",
+      "Edit(docs/02-requirements/**)",
+      "Write(docs/40-verification/acceptance-sign-off.md)",
+      "Edit(docs/40-verification/acceptance-sign-off.md)"
     ],
     "deny": [
       "Bash(rm -rf *)",

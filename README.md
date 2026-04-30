@@ -1,24 +1,36 @@
 # viaduction — Claude Code 設計駆動開発ハーネス
 
-要件定義書 (`docs/00-requirements/requirements.md`) を起点に、基本設計 → 詳細設計 → 実装タスク → コーディングを **Claude Code** で支援するためのプロジェクトテンプレートです。
+ラフなアイデアや業務メモから始めて、要件発見 → 要件精査 → 仕様化 → 基本設計 → 詳細設計 → 実装タスク → コーディング → 検証までを **Claude Code** で支援するためのプロジェクトテンプレートです。
 
 ## 全体像
 
 ```
-[要件] docs/00-requirements/
-   │  /req-init で雛形を出す。中身は人間が書く。
+[Phase 0] 発見          docs/00-discovery/
+   │  /discover-requirements → IDEA-XXX / PROB-XXX を採番
    ▼
-[基本設計] docs/10-basic-design/
-   │  /basic-design → basic-design-architect が UC/SCR/API/DB/NFR を採番
+[Phase 1] 精査          docs/01-requirement-refinement/
+   │  /interview-requirements → 質問抽出
+   │  /refine-requirements   → RC-XXX を起票
+   │  /review-requirements   → 5 種レビュアを並列実行
    ▼
-[詳細設計] docs/20-detail-design/
-   │  /detail-design → detail-design-architect が 1 ID 1 ファイルで生成
+[Phase 2] 仕様化        docs/02-requirements/
+   │  /specify-requirements  → REQ-XXX (candidate) を起票
+   │  ※ status=approved を押すのは人間のみ
    ▼
-[タスク分解] docs/30-implementation-plan/task-breakdown.md
-   │  /task-breakdown → task-planner が TASK-XXX を起こす
+[Phase 3] 基本設計      docs/10-basic-design/
+   │  /basic-design → UC/SCR/API/DB/NFR を採番
    ▼
-[実装] src/, tests/
-      /implement TASK-XXX → implementer (TASK-ID 必須)
+[Phase 4] 詳細設計      docs/20-detail-design/
+   │  /detail-design → 1 ID 1 ファイルで生成
+   ▼
+[Phase 5] タスク分解    docs/30-implementation-plan/task-breakdown.md
+   │  /task-breakdown → TASK-XXX を起こす
+   ▼
+[Phase 6] 実装          src/, tests/
+   │  /implement TASK-XXX → implementer (TASK-ID 必須)
+   ▼
+[Phase 7] 検証          docs/40-verification/
+        テスト緑 → 人間が verified を承認
 ```
 
 横断: `/design-review` (BLOCKER/MAJOR/MINOR の指摘) と `/trace-check` (ID 整合の機械検証)。
@@ -30,47 +42,56 @@
 ├── .claude/
 │   ├── CLAUDE.md              ハーネス全体の指示書
 │   ├── settings.json          permissions / hooks
-│   ├── rules/                 番号順に適用されるルール群
+│   ├── rules/                 番号順に適用されるルール群 (00〜50)
 │   ├── skills/                Claude が呼び出せる手順スキル
-│   ├── agents/                Subagent 定義
-│   ├── commands/              スラッシュコマンド
+│   ├── agents/                Subagent 定義 (要件系 7 + 設計系 6)
+│   ├── commands/              スラッシュコマンド (要件系 5 + 設計系 7)
 │   └── hooks/                 PostToolUse 等のシェルフック
 ├── docs/
-│   ├── 00-requirements/       要件定義 + 用語集
-│   ├── 10-basic-design/       基本設計
-│   ├── 20-detail-design/      詳細設計 (1 ID 1 ファイル)
-│   └── 30-implementation-plan/タスク分解 + マイルストーン
+│   ├── 00-discovery/             IDEA / PROB / 痛み / ゴール / 質問
+│   ├── 01-requirement-refinement/ RC + 5 種のレビュー素材
+│   ├── 02-requirements/          正式要件 (REQ / NFR / 業務ルール / 用語集)
+│   ├── 10-basic-design/          基本設計
+│   ├── 20-detail-design/         詳細設計 (1 ID 1 ファイル)
+│   ├── 30-implementation-plan/   タスク分解 + マイルストーン
+│   └── 40-verification/          検証計画・結果・受入承認
 ├── scripts/
-│   └── validate-traceability.ts   ID 整合検証
+│   └── validate-traceability.ts  ID 整合検証
 └── package.json
 ```
 
 ## 使い方 (典型フロー)
 
 ```bash
-# 1. 依存をインストール (tsx を使うため)
+# 1. 依存をインストール
 npm install
 
 # 2. Claude Code を起動 (このディレクトリで)
-#    (.claude/ が自動で読み込まれる)
+#    .claude/ が自動で読み込まれる
 ```
 
 Claude Code 内で：
 
-1. `/req-init` — 要件雛形を生成。人間が中身を書く。
-2. `/basic-design` — 基本設計を生成。`basic-design-architect` が動く。
-3. `/design-review basic` — 設計レビュー (読み取り専用)。
-4. `/trace-check` — ID 整合の機械検証。
-5. `/detail-design` — 詳細設計を 1 ID 1 ファイルで生成。
-6. `/task-breakdown` — TASK-XXX に分解。
-7. `/implement TASK-001` — 1 タスクずつ実装 (TASK-ID 必須)。
+1. 人間が `docs/00-discovery/idea-notes.md` `pain-points.md` 等にラフメモを書く。
+2. `/discover-requirements` — IDEA-XXX / PROB-XXX を採番。
+3. `/interview-requirements` — 不明点を質問化。人間が回答。
+4. `/refine-requirements` — RC-XXX を起票して整理。
+5. `/review-requirements all` — 5 種レビュアを並列実行。BLOCKER 解消まで反復。
+6. `/specify-requirements` — RC (refined) → REQ (candidate) に変換。
+7. **人間が** `### Status: approved` に変更。
+8. `/basic-design` — UC/SCR/API/DB を採番。
+9. `/design-review basic` → `/trace-check` で確認。
+10. `/detail-design` → `/task-breakdown` → `/implement TASK-001` の順に進む。
 
 ## ID 体系
 
 | 接頭辞 | 種別 | 採番者 |
 | --- | --- | --- |
-| `REQ-XXX` | 機能要件 | 人間 |
-| `NFR-XXX` | 非機能要件 | 人間 |
+| `IDEA-XXX` | アイデア | `requirement-analyst` |
+| `PROB-XXX` | 解決したい課題 | `requirement-analyst` |
+| `RC-XXX` | 要件候補（未承認） | `requirement-analyst` |
+| `REQ-XXX` | 機能要件（人間承認済） | 人間（Claude は `candidate` まで） |
+| `NFR-XXX` | 非機能要件 | 同上 |
 | `UC-XXX` | ユースケース | `basic-design-architect` |
 | `SCR-XXX` | 画面 | `basic-design-architect` |
 | `API-XXX` | API エンドポイント | `basic-design-architect` |
@@ -81,12 +102,26 @@ Claude Code 内で：
 トレーサビリティ：
 
 ```
-REQ ──┬─> UC ──┬─> SCR ──┐
-      │        └─> API ──┼─> DB
-      └──────────────────┘
+IDEA / PROB ──> RC ──> REQ ──┬─> UC ──┬─> SCR ──┐
+                              │        └─> API ──┼─> DB
+                              └──────────────────┘
 TASK ──> {REQ, UC, SCR, API, DB} を参照
 TEST ──> {REQ, UC} を検証
 ```
+
+## 要件ステータス
+
+要件 (`RC-XXX` / `REQ-XXX` / `NFR-XXX`) の `### Status` セクションは次のいずれか：
+
+```
+candidate ─[レビュア通過]─> needs-clarification ─[人間補足]─> refined
+refined  ─[/specify-requirements]─> 02-requirements の REQ (status=candidate)
+candidate (REQ) ─[人間承認]─> approved ─[実装]─> implemented ─[検証]─> verified
+                                                   ↓
+                                       却下 / 保留: rejected / deferred
+```
+
+**Claude は `approved` `verified` を押さない**。これらは人間の責務。
 
 ## 検証スクリプト
 
@@ -94,15 +129,31 @@ TEST ──> {REQ, UC} を検証
 # 検証のみ (終了コード: 0=OK / 1=ERR / 2=WARN)
 npm run trace
 
-# 99-traceability.md を再生成
+# 99-traceability.md / traceability-seed.md を再生成
 npm run trace:emit
 
 # JSON で出力 (CI 連携用)
 npm run trace:json
 ```
 
+検査内容：
+
+| 種別 | 重大度 |
+| --- | --- |
+| 未定義 ID への参照 | error |
+| ID 重複定義（4 箇所以上） | error |
+| `REQ` がいずれの `UC` からも参照されない | error |
+| `UC` がいずれの `SCR/API` からも参照されない | error |
+| `SCR/API` がいずれの `TASK` からも参照されない | warn |
+| `DB` がいずれの `API` からも参照されない | warn |
+| `TASK` に `TEST` が無い | warn |
+| **`TASK` が `RC-XXX` を直接参照** | **error** |
+| **`REQ approved` で `### Acceptance Criteria` が空** | **error** |
+| **`REQ approved` で `### Open Questions` が残る** | **error** |
+| `TASK` が `REQ (status != approved)` を参照 | warn |
+
 ポイント：
-- 例示用の ID（説明文中の書式サンプル）は **コードフェンス（```` ``` ````）の中に書けば検証対象から外れる**。本物の ID は本文中の表や `### XXX-NNN —` 見出しに書く。
+- 例示用の ID（説明文中の書式サンプル）は **コードフェンス（```` ``` ````）の中に書けば検証対象から外れる**。
 - 自動生成ブロック (`<!-- TRACE:NAME:START --> ... <!-- TRACE:NAME:END -->`) も検証対象から外れる。手で編集しない。
 - `_TEMPLATE.md` で終わるファイルは丸ごとスキップ。
 
@@ -115,23 +166,25 @@ npm run trace:json
 ```
 
 - 警告内容: ログイン例の `SCR-001` `API-001` がまだ TASK に紐づいていない
-- これは **意図された状態**。基本設計まで終わっているが、`/task-breakdown` をまだ実行していない、という想定。
-- 実プロジェクト開始時は、サンプル例（`requirements.md` の REQ-001、`01-system-overview.md` の UC-001 など）を自分の要件に置き換えてから `/basic-design` を回してください。
+- これは **意図された状態**。基本設計まで終わっているが `/task-breakdown` を実行していない、という想定。
+- サンプルチェーンは `IDEA-001 → PROB-001 → RC-001 → REQ-001 → UC-001 → SCR-001/API-001 → DB-001/DB-002` まで揃っている。
+- 実プロジェクト開始時はサンプル一式を削除し、自分の要件で `/discover-requirements` から始めてください。
 
 ## 安全に関する初期設定
 
 - 破壊的コマンド (`rm -rf`、`git push --force`、`git reset --hard` 等) は `.claude/settings.json` で deny。
-- `git commit` / `git push` / `gh pr` / 依存追加 / `docs/00-requirements/` への書き込みは ask 権限。
-- レビュア系 Subagent (`design-reviewer`, `traceability-auditor`) は読み取り専用。
+- `git commit` / `git push` / `gh pr` / 依存追加 / `docs/02-requirements/` への書き込みは ask 権限。
+- レビュア系 Subagent (5 種要件レビュア + `design-reviewer` + `traceability-auditor`) は **読み取り専用**。
 - 実装系 Subagent (`implementer`) は **TASK-ID 必須**。指定が無いと拒否する。
+- **要件の `approved` / `verified` は Claude が押さない**（rule 50-safety で禁止）。
 
 詳細は `.claude/rules/50-safety.md` を参照。
 
 ## 拡張のヒント
 
+- 新しい ID 接頭辞を追加する場合は `scripts/validate-traceability.ts` の `PREFIXES` を拡張。
+- 新しいレビュー観点を加えるなら `.claude/agents/` に Read-only Subagent を追加して `/review-requirements` を更新。
 - 言語・フレームワーク固有の規約は `.claude/rules/30-coding-style.md` に追記。
-- 新しい設計章を増やす場合は (1) `docs/10-basic-design/` にファイル追加 (2) `basic-design-architect.md` の出力リスト更新 (3) `validate-traceability.ts` の対象に組み込む、の 3 点を変更。
-- 別言語のフィールドを ID に増やしたい場合は `validate-traceability.ts` の `PREFIXES` を拡張。
 
 ## ライセンス
 

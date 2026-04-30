@@ -1,62 +1,84 @@
 # viaduction — 設計駆動開発ハーネス (Claude Code)
 
-このリポジトリは「要件定義書を起点に、基本設計 → 詳細設計 → 実装タスク → コーディング」を Claude Code で支援するためのハーネスです。
+このリポジトリは「アイデア・課題メモ → 要件候補 → 正式要件 → 基本設計 → 詳細設計 → 実装タスク → コーディング → 検証」の段階を Claude Code で支援するためのハーネスです。
 あなた（Claude）はここに定義された手順・ルール・成果物のフォーマットに従って動作してください。
 
 ## 進行プロトコル(必ず守る)
 
-1. **起点は `docs/00-requirements/requirements.md`**。要件 ID（`REQ-XXX`）が無い記述は仕様として扱わない。
-2. 段階を飛ばさない。基本設計が無いまま詳細設計に入らない。詳細設計が無いまま実装に入らない。
-3. 各成果物には**先頭に Front-matter** とトレーサビリティ表を必ず置く。
-4. 設計を書くときは **`/basic-design` などの専用コマンド** を経由するか、対応する Subagent を呼ぶ。
-5. **実装系の作業は `TASK-ID` が指定されたときだけ** 行う。`TASK-ID` が無いまま `src/**` を編集してはならない。
-6. 破壊的なシェル操作（`rm -rf`、強制 push、`git reset --hard` など）は禁止。`.claude/settings.json` の `deny` を信頼する前に、まず人間に確認する。
-7. すべての成果物・解説は **日本語** で出力する。コード中の識別子・コミットメッセージは英語で良い。
+1. **起点は `docs/00-discovery/`**。アイデア・痛み・現状フローはまずここに集約される。
+2. **正式要件 `REQ-XXX` の置き場は `docs/02-requirements/`**。`### Status: approved` になっていない要件を実装対象にしない。
+3. **要件候補 `RC-XXX` を直接実装対象にしない**（`scripts/validate-traceability.ts` で error）。
+4. 段階を飛ばさない。Discovery → Refinement → Specification → Basic → Detail → Plan → Implement → Verify の順。
+5. 各成果物には**先頭に Front-matter** とトレーサビリティ表を必ず置く。
+6. 設計を書くときは **専用のスラッシュコマンド** を経由するか、対応する Subagent を呼ぶ。
+7. **実装系の作業は `TASK-ID` が指定されたときだけ** 行う。`TASK-ID` が無いまま `src/**` を編集してはならない。
+8. 破壊的なシェル操作（`rm -rf`、強制 push、`git reset --hard` など）は禁止。
+9. すべての成果物・解説は **日本語** で出力する。コード中の識別子・コミットメッセージは英語で良い。
 
 ## 成果物の置き場所
 
-| フェーズ | ディレクトリ | 主担当 Subagent |
+| Phase | フェーズ | ディレクトリ | 主担当 Subagent |
+| --- | --- | --- | --- |
+| 0 | Discovery | `docs/00-discovery/` | `requirement-analyst` |
+| 1 | Refinement | `docs/01-requirement-refinement/` | `requirement-analyst` + 5 レビュア |
+| 2 | Specification | `docs/02-requirements/` | `requirement-analyst` (specify Skill) |
+| 3 | Basic Design | `docs/10-basic-design/` | `basic-design-architect` |
+| 4 | Detail Design | `docs/20-detail-design/` | `detail-design-architect` |
+| 5 | Implementation Plan | `docs/30-implementation-plan/` | `task-planner` |
+| 6 | Coding | `src/` | `implementer` (TASK-ID 必須) |
+| 7 | Verification | `docs/40-verification/` | (人間 + テスト) |
+
+## ID 体系（詳細は `.claude/rules/10-traceability.md`）
+
+| 接頭辞 | 種別 | 採番者 |
 | --- | --- | --- |
-| 要件定義 | `docs/00-requirements/` | (人間が起点) |
-| 基本設計 | `docs/10-basic-design/` | `basic-design-architect` |
-| 詳細設計 | `docs/20-detail-design/` | `detail-design-architect` |
-| 実装計画 | `docs/30-implementation-plan/` | `task-planner` |
-| 実装コード | `src/` | `implementer` (TASK-ID 必須) |
-| テスト | `tests/` または `src/**/*.test.*` | `implementer` |
-| 検証スクリプト | `scripts/` | (共通) |
+| `IDEA-XXX` | アイデア | `requirement-analyst` |
+| `PROB-XXX` | 解決したい課題 | `requirement-analyst` |
+| `RC-XXX` | 要件候補（未承認） | `requirement-analyst` |
+| `REQ-XXX` | 正式要件（人間承認済） | 人間（Claude は `candidate` まで） |
+| `NFR-XXX` | 非機能要件 | 同上 |
+| `UC-XXX` | ユースケース | `basic-design-architect` |
+| `SCR-XXX` | 画面 | `basic-design-architect` |
+| `API-XXX` | API | `basic-design-architect` |
+| `DB-XXX` | データモデル | `basic-design-architect` |
+| `TASK-XXX` | 実装タスク | `task-planner` |
+| `TEST-XXX` | テストケース | `task-planner` / `implementer` |
 
-## ID の命名規則(詳細は `.claude/rules/10-traceability.md`)
+## ステータス体系（要件のライフサイクル）
 
-- `REQ-XXX` 要件 / `UC-XXX` ユースケース / `SCR-XXX` 画面 / `API-XXX` API / `DB-XXX` データ / `NFR-XXX` 非機能要件
-- `TASK-XXX` 実装タスク / `TEST-XXX` テスト
-- 番号は 3 桁ゼロ詰め。一度払い出した番号は再利用しない（欠番は許容）。
+```
+candidate ─[レビュア通過]─> needs-clarification ─[人間補足]─> refined
+refined  ─[/specify-requirements]─> 02-requirements の REQ (status=candidate)
+candidate (REQ) ─[人間承認]─> approved ─[実装]─> implemented ─[検証]─> verified
+                                  ↓
+                          却下 / 保留: rejected / deferred
+```
 
 ## トレーサビリティの方向
 
 ```
-REQ ──┬─> UC ──┬─> SCR ──┐
-      │        └─> API ──┼─> DB
-      └──────────────────┘
-
+IDEA / PROB ──> RC ──> REQ ──┬─> UC ──┬─> SCR ──┐
+                              │        └─> API ──┼─> DB
+                              └──────────────────┘
 TASK ──> {REQ, UC, SCR, API, DB} を参照
 TEST ──> {REQ, UC} を検証
 ```
 
-参照の向きは **下流が上流を引用する** 形を基本とする。各設計ドキュメントの末尾に `## 参照` セクションを設け、参照する上流 ID を必ず列挙する。
+参照の向きは **下流が上流を引用する** 形を基本。各設計ドキュメントの末尾に `## 参照` を必ず置く。
 
 ## 利用するハーネス機能
 
-- **Skills**: `traceability-check` / `design-template` / `task-breakdown`
-- **Subagents**: `basic-design-architect` / `detail-design-architect` / `task-planner` / `design-reviewer` / `traceability-auditor` / `implementer`
-- **Commands**: `/req-init` `/basic-design` `/detail-design` `/task-breakdown` `/design-review` `/trace-check` `/implement`
-- **Hooks**: `PostToolUse` でドキュメント編集後にトレーサビリティの再チェックを促す
+- **Skills**: `idea-to-requirement-candidates` / `requirement-interview` / `requirement-refinement` / `requirement-specification` / `traceability-check` / `design-template` / `task-breakdown`
+- **Subagents**: `requirement-interviewer` / `requirement-analyst` / `ambiguity-reviewer` / `scope-reviewer` / `business-rule-reviewer` / `non-functional-requirement-reviewer` / `acceptance-criteria-reviewer` / `basic-design-architect` / `detail-design-architect` / `task-planner` / `design-reviewer` / `traceability-auditor` / `implementer`
+- **Commands**: `/discover-requirements` `/interview-requirements` `/refine-requirements` `/review-requirements` `/specify-requirements` `/req-init` `/basic-design` `/detail-design` `/task-breakdown` `/design-review` `/trace-check` `/implement`
+- **Hooks**: `PostToolUse` で要件・設計ドキュメント編集後にトレーサビリティの再チェックを促す
 - **Validation**: `npx tsx scripts/validate-traceability.ts`
 
 ## ルールの読み込み順
 
-このファイルに加えて、`.claude/rules/` 配下のルールはすべて適用される。原則として以下の番号順に上書き解釈する：
+このファイルに加えて、`.claude/rules/` 配下のルールはすべて適用される。番号順に上書き解釈：
 
-1. `00-overview.md` — 全体像
+1. `00-overview.md` — 全体像とフェーズ
 2. `10-traceability.md` — ID とトレーサビリティ
 3. `20-design-process.md` — 設計プロセス
 4. `30-coding-style.md` — コーディング規約
@@ -67,6 +89,6 @@ TEST ──> {REQ, UC} を検証
 
 ## 困ったとき
 
-- 要件が曖昧なら **自分で書き足さず**、対応する `REQ-XXX` の `仕様（未確定事項）` セクションに `??` で質問を残し、人間に確認する。
-- 設計の選択肢が複数ある場合は、`docs/10-basic-design/02-architecture.md` の `## 検討中の選択肢` に併記し、決定者・期限を明記する。
-- 自分の出力に自信が無いとき、`design-reviewer` Subagent を呼んで第三者レビューを受ける。
+- 要件が曖昧なら **自分で書き足さず**、`docs/00-discovery/open-questions.md` または `docs/01-requirement-refinement/ambiguity-review.md` に質問を残す。
+- 要件のステータスが `approved` になっていなければ実装に進まない。レビュア Subagent (`/review-requirements`) を回す。
+- 自分の出力に自信が無いとき、対応するレビュア Subagent を呼んで第三者レビューを受ける。

@@ -16,7 +16,7 @@ model: inherit
 - 詳細設計レビューなら `docs/20-detail-design/**/*.md`
 - タスク分解レビューなら `docs/30-implementation-plan/task-breakdown.md`
 
-参照のために `docs/00-requirements/requirements.md` と `docs/00-requirements/glossary.md` も読む。
+参照のために `docs/02-requirements/requirements.md` と `docs/02-requirements/glossary.md` も読む。
 
 ## 出力
 

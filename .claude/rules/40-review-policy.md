@@ -6,17 +6,24 @@
 
 | 種別 | 担当 | 入力 | 出力 |
 | --- | --- | --- | --- |
-| 設計レビュー | `design-reviewer` | 任意の設計 md | 指摘リスト（影響度付き） |
+| 曖昧さレビュー | `ambiguity-reviewer` | RC-XXX | 指摘リスト |
+| スコープレビュー | `scope-reviewer` | RC-XXX + scope-definition.md | 指摘リスト |
+| 業務ルールレビュー | `business-rule-reviewer` | RC/REQ + business-rules.md | 指摘リスト |
+| 非機能要件レビュー | `non-functional-requirement-reviewer` | RC/NFR | 指摘リスト |
+| 受入条件レビュー | `acceptance-criteria-reviewer` | RC/REQ の AC | 指摘リスト |
+| 設計レビュー | `design-reviewer` | 基本/詳細設計 md | 指摘リスト（影響度付き） |
 | トレーサビリティ監査 | `traceability-auditor` | 全 docs + script 実行結果 | カバレッジレポート |
 | コードレビュー | (任意のレビュア) | 差分 | 改善提案 |
 
 ## レビュア Subagent の権限
 
-`design-reviewer` と `traceability-auditor` は **読み取り専用**。`Read`, `Grep`, `Glob`, および (`traceability-auditor` のみ) `Bash(npx tsx scripts/validate-traceability.ts:*)` を使う。
+要件系レビュア (`ambiguity-reviewer`, `scope-reviewer`, `business-rule-reviewer`, `non-functional-requirement-reviewer`, `acceptance-criteria-reviewer`) と設計系レビュア (`design-reviewer`, `traceability-auditor`) はすべて **読み取り専用**。
 
-- ファイルを書き換えない
-- ドキュメントの修正案は **本文として返す**。実際の更新は人間が指示するまで行わない。
-- レビュー結果は所定のフォーマットで返す（後述）。
+- ファイルを書き換えない（`tools` に `Write` `Edit` を含めない）
+- ドキュメントの修正案は **本文として返す**。実際の更新は人間が指示するまで行わない
+- レビュー結果は所定のフォーマットで返す（後述）
+
+ただし `traceability-auditor` のみ `Bash(npx tsx scripts/validate-traceability.ts:*)` を使うことができる（検証スクリプトの実行のため）。
 
 ## レビューの観点
 
@@ -37,6 +44,8 @@
 
 | フェーズ | カバレッジ目標 |
 | --- | --- |
+| 要件精査完了時 | RC が `Source` (`IDEA-XXX` or `PROB-XXX`) を必ず持ち、`Status` が `refined` 以上 |
+| 仕様化完了時 | 各 `RC (refined)` に対し `REQ-XXX (candidate)` が起票され、人間承認後 `approved` |
 | 基本設計完了時 | REQ→UC=100%、UC→(SCR or API)=100% |
 | 詳細設計完了時 | (SCR/API)→TASK=100%、(API/SCR)→DB のうち必要なもの=100% |
 | 実装着手後 | TASK→TEST=80% 以上 |
