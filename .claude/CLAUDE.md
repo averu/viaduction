@@ -68,9 +68,9 @@ TEST ──> {REQ, UC} を検証
 
 ## 利用するハーネス機能
 
-- **Skills**: `idea-to-requirement-candidates` / `requirement-interview` / `requirement-refinement` / `requirement-specification` / `traceability-check` / `design-template` / `task-breakdown`
+- **Skills**: `idea-to-requirement-candidates` / `requirement-interview` / `requirement-refinement` / `requirement-specification` / `traceability-check` / `design-template` / `task-breakdown` / `git-commit-workflow` / `pull-request-workflow`
 - **Subagents**: `requirement-interviewer` / `requirement-analyst` / `ambiguity-reviewer` / `scope-reviewer` / `business-rule-reviewer` / `non-functional-requirement-reviewer` / `acceptance-criteria-reviewer` / `basic-design-architect` / `detail-design-architect` / `task-planner` / `design-reviewer` / `traceability-auditor` / `implementer`
-- **Commands**: `/discover-requirements` `/interview-requirements` `/refine-requirements` `/review-requirements` `/specify-requirements` `/req-init` `/basic-design` `/detail-design` `/task-breakdown` `/design-review` `/trace-check` `/implement`
+- **Commands**: `/discover-requirements` `/interview-requirements` `/refine-requirements` `/review-requirements` `/specify-requirements` `/req-init` `/basic-design` `/detail-design` `/task-breakdown` `/design-review` `/trace-check` `/implement` `/prepare-commit` `/prepare-pr`
 - **Hooks**: `PostToolUse` で要件・設計ドキュメント編集後にトレーサビリティの再チェックを促す
 - **Validation**: `npx tsx scripts/validate-traceability.ts`
 
@@ -85,7 +85,12 @@ TEST ──> {REQ, UC} を検証
 5. `40-review-policy.md` — レビュー方針
 6. `50-safety.md` — 安全に関するルール
 
-衝突したときは **番号が大きい方**（より具体的なルール）を優先する。
+並列して適用される非番号ルール：
+
+- `git-workflow.md` — Conventional Commits 規約 / Claude のコミット動作
+- `github-workflow.md` — Pull Request 規約 / Claude の PR 動作
+
+衝突したときは **番号が大きい方**（より具体的なルール）を優先する。番号付きと非番号付きが衝突した場合は、内容が具体的な方（典型的には非番号付き）を優先する。
 
 ## 困ったとき
 

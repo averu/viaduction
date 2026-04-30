@@ -50,9 +50,12 @@
 
 ## バージョン管理
 
-- ブランチ: `feature/TASK-XXX-short-slug`
-- コミットメッセージ: `<type>(TASK-XXX): 概要` / 例: `feat(TASK-010): add login API client`
-- 1 PR = 1 タスクが基本。例外時は PR 説明欄に理由を書く。
+詳細は `.claude/rules/git-workflow.md` および `.claude/rules/github-workflow.md` を参照。要点のみ：
+
+- ブランチ: `feature/TASK-XXX-short-slug`（実装系）/ `design/REQ-XXX-short-slug`（設計系）
+- コミット: Conventional Commits 形式 `<type>(<scope>): <summary>`。TASK-ID は **コミット本文の `Related:`** に書く（ヘッダの scope はコード上の領域名）。
+- 1 PR = 1 タスクが基本。例外時は PR 説明欄の Notes に理由を書く。
+- `Co-Authored-By` トレーラはこのプロジェクトでは付けない。
 
 ## やってはいけないこと
 

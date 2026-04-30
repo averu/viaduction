@@ -42,11 +42,13 @@
 ├── .claude/
 │   ├── CLAUDE.md              ハーネス全体の指示書
 │   ├── settings.json          permissions / hooks
-│   ├── rules/                 番号順に適用されるルール群 (00〜50)
+│   ├── rules/                 番号順 (00〜50) + git-workflow / github-workflow
 │   ├── skills/                Claude が呼び出せる手順スキル
 │   ├── agents/                Subagent 定義 (要件系 7 + 設計系 6)
-│   ├── commands/              スラッシュコマンド (要件系 5 + 設計系 7)
+│   ├── commands/              スラッシュコマンド (要件系 5 + 設計系 7 + git/PR 系 2)
 │   └── hooks/                 PostToolUse 等のシェルフック
+├── .github/
+│   └── pull_request_template.md  PR 説明欄のテンプレート
 ├── docs/
 │   ├── 00-discovery/             IDEA / PROB / 痛み / ゴール / 質問
 │   ├── 01-requirement-refinement/ RC + 5 種のレビュー素材
@@ -179,6 +181,13 @@ npm run trace:json
 - **要件の `approved` / `verified` は Claude が押さない**（rule 50-safety で禁止）。
 
 詳細は `.claude/rules/50-safety.md` を参照。
+
+## コミットと Pull Request
+
+- **コミット**: Conventional Commits 形式 (`<type>(<scope>): <summary>`)。詳細は `.claude/rules/git-workflow.md`。
+- **PR**: タイトルも Conventional Commits。本文は `.github/pull_request_template.md` の構造に従い、Related IDs / Verification / Reviewer Checklist を必ず埋める。詳細は `.claude/rules/github-workflow.md`。
+- Claude Code 内で `/prepare-commit` を実行するとコミット案を、`/prepare-pr` を実行するとPR タイトル案と本文案を起草する。**実行は人間の承認後**。
+- `Co-Authored-By` トレーラはこのプロジェクトでは付けない。
 
 ## 拡張のヒント
 
