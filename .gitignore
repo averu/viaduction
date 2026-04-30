@@ -1,0 +1,18 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Build artifacts
+dist/
+build/
+coverage/
+
+# Local Claude Code state (keep settings.json under VCS, ignore local overrides)
+.claude/settings.local.json

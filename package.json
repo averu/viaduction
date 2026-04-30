@@ -1,0 +1,19 @@
+{
+  "name": "viaduction",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Claude Code 用の設計駆動開発ハーネス。要件定義書を起点に基本設計・詳細設計・実装タスク・コーディングを支援する。",
+  "type": "module",
+  "scripts": {
+    "trace": "tsx scripts/validate-traceability.ts",
+    "trace:emit": "tsx scripts/validate-traceability.ts --emit",
+    "trace:json": "tsx scripts/validate-traceability.ts --json"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}

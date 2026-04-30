@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(pwd)",
+      "Bash(tree:*)",
+      "Bash(find . -*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(wc:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(diff:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git ls-files:*)",
+      "Bash(npx tsx scripts/validate-traceability.ts:*)",
+      "Bash(npm run trace:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run typecheck:*)"
+    ],
+    "ask": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh pr *)",
+      "Bash(gh issue *)",
+      "Bash(npm install:*)",
+      "Bash(pnpm install:*)",
+      "Bash(yarn install:*)",
+      "Write(docs/00-requirements/**)",
+      "Edit(docs/00-requirements/**)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(rm -rf:*)",
+      "Bash(rm -fr *)",
+      "Bash(:(){ :|:& };:)",
+      "Bash(sudo:*)",
+      "Bash(chmod 777:*)",
+      "Bash(chown:*)",
+      "Bash(mkfs:*)",
+      "Bash(dd if=*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git push --force-with-lease:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -fd:*)",
+      "Bash(git checkout --:*)",
+      "Bash(git restore --:*)",
+      "Bash(git branch -D:*)",
+      "Bash(git rebase -i:*)",
+      "Bash(curl * | sh:*)",
+      "Bash(curl * | bash:*)",
+      "Bash(wget * | sh:*)",
+      "Bash(wget * | bash:*)",
+      "Write(.git/**)",
+      "Edit(.git/**)",
+      "Write(.env)",
+      "Write(.env.*)",
+      "Read(./.env)",
+      "Read(./.env.*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-edit-notice.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "VIADUCTION_DOCS_ROOT": "docs",
+    "VIADUCTION_TRACE_SCRIPT": "scripts/validate-traceability.ts"
+  }
+}
