@@ -22,7 +22,11 @@
       "Bash(npm run trace:*)",
       "Bash(npm run lint:*)",
       "Bash(npm run test:*)",
-      "Bash(npm run typecheck:*)"
+      "Bash(npm run typecheck:*)",
+      "Bash(pnpm typecheck *)",
+      "Bash(pnpm test --run *)",
+      "Bash(pnpm lint *)",
+      "Bash(node --experimental-strip-types scripts/validate-traceability.ts *)"
     ],
     "ask": [
       "Bash(git add:*)",
