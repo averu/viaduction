@@ -31,6 +31,12 @@
    ▼
 [Phase 7] 検証          docs/40-verification/
         テスト緑 → 人間が verified を承認
+
+[Phase 0.5 補助] 外部インプット   docs/05-external-inputs/
+   /import-external-input → SRC-XXX / QA-XXX 採番（PII 除去）
+   /analyze-external-qa  → DEC / OQ / CONFLICT に分類
+   /plan-doc-reflection  → Reflection Plan 起草（書き込みなし）
+   /reflect-external-input → 既存 / 新規ドキュメントへ反映
 ```
 
 横断: `/design-review` (BLOCKER/MAJOR/MINOR の指摘) と `/trace-check` (ID 整合の機械検証)。
@@ -42,10 +48,10 @@
 ├── .claude/
 │   ├── CLAUDE.md              ハーネス全体の指示書
 │   ├── settings.json          permissions / hooks
-│   ├── rules/                 番号順 (00〜50) + git-workflow / github-workflow
+│   ├── rules/                 番号順 (00〜50) + git/github-workflow + external-input-handling
 │   ├── skills/                Claude が呼び出せる手順スキル
-│   ├── agents/                Subagent 定義 (要件系 7 + 設計系 6)
-│   ├── commands/              スラッシュコマンド (要件系 5 + 設計系 7 + git/PR 系 2)
+│   ├── agents/                Subagent 定義 (要件系 7 + 設計系 6 + 外部系 4)
+│   ├── commands/              スラッシュコマンド (要件 5 + 設計 7 + git/PR 2 + 外部 5)
 │   └── hooks/                 PostToolUse 等のシェルフック
 ├── .github/
 │   └── pull_request_template.md  PR 説明欄のテンプレート
@@ -53,6 +59,7 @@
 │   ├── 00-discovery/             IDEA / PROB / 痛み / ゴール / 質問
 │   ├── 01-requirement-refinement/ RC + 5 種のレビュー素材
 │   ├── 02-requirements/          正式要件 (REQ / NFR / 業務ルール / 用語集)
+│   ├── 05-external-inputs/       外部 Q&A 取り込み (SRC / QA / DEC / OQ / CONFLICT)
 │   ├── 10-basic-design/          基本設計
 │   ├── 20-detail-design/         詳細設計 (1 ID 1 ファイル)
 │   ├── 30-implementation-plan/   タスク分解 + マイルストーン
@@ -100,6 +107,11 @@ Claude Code 内で：
 | `DB-XXX` | データモデル | `basic-design-architect` |
 | `TASK-XXX` | 実装タスク | `task-planner` |
 | `TEST-XXX` | テストケース | `task-planner` / `implementer` |
+| `SRC-XXX` | 外部情報ソース | `external-input-analyst` |
+| `QA-XXX` | 外部 Q&A | `external-input-analyst` |
+| `DEC-XXX` | 外部由来の決定事項 | `external-input-analyst` |
+| `OQ-XXX` | 外部由来の未決事項 | `external-input-analyst` |
+| `CONFLICT-XXX` | 既存資料との矛盾 | `external-input-analyst` / `external-conflict-reviewer` |
 
 トレーサビリティ：
 
@@ -181,6 +193,34 @@ npm run trace:json
 - **要件の `approved` / `verified` は Claude が押さない**（rule 50-safety で禁止）。
 
 詳細は `.claude/rules/50-safety.md` を参照。
+
+## 外部 Q&A の取り込み (Phase 0.5)
+
+Backlog / GitHub Issues / スプレッドシート / 議事録 / チャットログなど、Git 外で行われた質疑応答を取り込む補助フェーズ。
+
+```
+人間が貼り付け or エクスポート
+  ↓
+/import-external-input  → SRC-XXX / QA-XXX 採番、PII 除去
+  ↓
+/analyze-external-qa    → Decision (DEC) / Open Question (OQ) / Conflict (CONFLICT) に分類
+  ↓
+/review-external-conflicts (該当時) → 矛盾レビュー
+  ↓
+/plan-doc-reflection    → Reflection Plan 起草（書き込みなし）
+  ↓
+人間が承認
+  ↓
+/reflect-external-input → 既存 / 新規ドキュメントへ反映、出典 ID を残す
+```
+
+要点：
+- **外部サービスへ直アクセスしない**。人間が貼り付けたものだけを扱う。
+- **PII / 認証情報 / 機密情報を docs に転記しない**。
+- **REQ への反映は `Status: candidate` のみ**。`approved` への昇格は人間。
+- **既存ドキュメントを勝手に上書きしない**。矛盾は `05-conflicts.md` に両論併記。
+
+詳細は `docs/05-external-inputs/README.md` と `.claude/rules/external-input-handling.md`。
 
 ## コミットと Pull Request
 

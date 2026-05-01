@@ -22,6 +22,7 @@
 | 0 | Discovery | `docs/00-discovery/` | `requirement-analyst` |
 | 1 | Refinement | `docs/01-requirement-refinement/` | `requirement-analyst` + 5 レビュア |
 | 2 | Specification | `docs/02-requirements/` | `requirement-analyst` (specify Skill) |
+| 0.5 (補助) | External Inputs | `docs/05-external-inputs/` | `external-input-analyst` + 矛盾レビュア |
 | 3 | Basic Design | `docs/10-basic-design/` | `basic-design-architect` |
 | 4 | Detail Design | `docs/20-detail-design/` | `detail-design-architect` |
 | 5 | Implementation Plan | `docs/30-implementation-plan/` | `task-planner` |
@@ -43,6 +44,11 @@
 | `DB-XXX` | データモデル | `basic-design-architect` |
 | `TASK-XXX` | 実装タスク | `task-planner` |
 | `TEST-XXX` | テストケース | `task-planner` / `implementer` |
+| `SRC-XXX` | 外部情報ソース | `external-input-analyst` |
+| `QA-XXX` | 外部 Q&A | `external-input-analyst` |
+| `DEC-XXX` | 外部由来の決定事項 | `external-input-analyst` |
+| `OQ-XXX` | 外部由来の未決事項 | `external-input-analyst` |
+| `CONFLICT-XXX` | 既存資料との矛盾 | `external-input-analyst` / `external-conflict-reviewer` |
 
 ## ステータス体系（要件のライフサイクル）
 
@@ -57,6 +63,8 @@ candidate (REQ) ─[人間承認]─> approved ─[実装]─> implemented ─[�
 ## トレーサビリティの方向
 
 ```
+SRC ──> QA ──> DEC / OQ / CONFLICT ──┐
+                                      ▼
 IDEA / PROB ──> RC ──> REQ ──┬─> UC ──┬─> SCR ──┐
                               │        └─> API ──┼─> DB
                               └──────────────────┘
@@ -68,9 +76,9 @@ TEST ──> {REQ, UC} を検証
 
 ## 利用するハーネス機能
 
-- **Skills**: `idea-to-requirement-candidates` / `requirement-interview` / `requirement-refinement` / `requirement-specification` / `traceability-check` / `design-template` / `task-breakdown` / `git-commit-workflow` / `pull-request-workflow`
-- **Subagents**: `requirement-interviewer` / `requirement-analyst` / `ambiguity-reviewer` / `scope-reviewer` / `business-rule-reviewer` / `non-functional-requirement-reviewer` / `acceptance-criteria-reviewer` / `basic-design-architect` / `detail-design-architect` / `task-planner` / `design-reviewer` / `traceability-auditor` / `implementer`
-- **Commands**: `/discover-requirements` `/interview-requirements` `/refine-requirements` `/review-requirements` `/specify-requirements` `/req-init` `/basic-design` `/detail-design` `/task-breakdown` `/design-review` `/trace-check` `/implement` `/prepare-commit` `/prepare-pr`
+- **Skills**: `idea-to-requirement-candidates` / `requirement-interview` / `requirement-refinement` / `requirement-specification` / `traceability-check` / `design-template` / `task-breakdown` / `git-commit-workflow` / `pull-request-workflow` / `external-input-intake` / `external-qa-analysis` / `external-input-to-docs` / `external-conflict-review`
+- **Subagents**: `requirement-interviewer` / `requirement-analyst` / `ambiguity-reviewer` / `scope-reviewer` / `business-rule-reviewer` / `non-functional-requirement-reviewer` / `acceptance-criteria-reviewer` / `basic-design-architect` / `detail-design-architect` / `task-planner` / `design-reviewer` / `traceability-auditor` / `implementer` / `external-input-analyst` / `qa-traceability-reviewer` / `document-reflection-planner` / `external-conflict-reviewer`
+- **Commands**: `/discover-requirements` `/interview-requirements` `/refine-requirements` `/review-requirements` `/specify-requirements` `/req-init` `/basic-design` `/detail-design` `/task-breakdown` `/design-review` `/trace-check` `/implement` `/prepare-commit` `/prepare-pr` `/import-external-input` `/analyze-external-qa` `/plan-doc-reflection` `/reflect-external-input` `/review-external-conflicts`
 - **Hooks**: `PostToolUse` で要件・設計ドキュメント編集後にトレーサビリティの再チェックを促す
 - **Validation**: `npx tsx scripts/validate-traceability.ts`
 
@@ -89,6 +97,7 @@ TEST ──> {REQ, UC} を検証
 
 - `git-workflow.md` — Conventional Commits 規約 / Claude のコミット動作
 - `github-workflow.md` — Pull Request 規約 / Claude の PR 動作
+- `external-input-handling.md` — 外部 Q&A 取り込み・反映規約 / PII 取扱い
 
 衝突したときは **番号が大きい方**（より具体的なルール）を優先する。番号付きと非番号付きが衝突した場合は、内容が具体的な方（典型的には非番号付き）を優先する。
 

@@ -2,7 +2,8 @@
 /**
  * scripts/validate-traceability.ts
  *
- * IDEA / PROB / RC / REQ / NFR / UC / SCR / API / DB / TASK / TEST のトレーサビリティを検証する。
+ * IDEA / PROB / RC / REQ / NFR / UC / SCR / API / DB / TASK / TEST と
+ * 外部インプット系 (SRC / QA / DEC / OQ / CONFLICT) のトレーサビリティを検証する。
  *
  * 使い方:
  *   npx tsx scripts/validate-traceability.ts             検証のみ
@@ -40,6 +41,12 @@ const PREFIXES = [
   "DB",
   "TASK",
   "TEST",
+  // 外部インプット系 (Phase 0.5)
+  "SRC",
+  "QA",
+  "DEC",
+  "OQ",
+  "CONFLICT",
 ] as const;
 const PREFIX_SET = new Set<string>(PREFIXES);
 type Prefix = (typeof PREFIXES)[number];
