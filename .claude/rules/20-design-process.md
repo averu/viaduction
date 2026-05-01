@@ -5,19 +5,19 @@
 - すべての設計ドキュメントは **Front-matter + 本文 + 参照** の三段構成。
 - 1 ファイルに **複数 ID を混ぜない**。`SCR-001.md` には `SCR-001` のみ書く。
 - 図は Mermaid を使う。レンダラ非依存のテキストフォーマットを優先する。
-- 用語は `docs/02-requirements/glossary.md` にあるものだけを使う。新出語は同ファイルに追記してから使う。
+- 用語は `docs/02-requirements/05-glossary.md` にあるものだけを使う。新出語は同ファイルに追記してから使う。
 
 ## 要件発見 (Phase 0) で書くこと
 
 | ファイル | 内容 |
 | --- | --- |
-| `docs/00-discovery/idea-notes.md` | アイデアの一次情報 (`IDEA-XXX` 採番) |
-| `docs/00-discovery/problem-statement.md` | 解決したい課題 (`PROB-XXX` 採番) |
-| `docs/00-discovery/stakeholder-notes.md` | 関係者の関心・期待 |
-| `docs/00-discovery/current-workflow.md` | 現状フロー (Mermaid 推奨) |
-| `docs/00-discovery/pain-points.md` | 痛みの一覧 |
-| `docs/00-discovery/goals.md` | ビジネスゴール (`GOAL-NN` 任意) |
-| `docs/00-discovery/open-questions.md` | 未確認事項 (`Q-XXX`) |
+| `docs/00-discovery/01-idea-notes.md` | アイデアの一次情報 (`IDEA-XXX` 採番) |
+| `docs/00-discovery/02-problem-statement.md` | 解決したい課題 (`PROB-XXX` 採番) |
+| `docs/00-discovery/03-stakeholder-notes.md` | 関係者の関心・期待 |
+| `docs/00-discovery/04-current-workflow.md` | 現状フロー (Mermaid 推奨) |
+| `docs/00-discovery/05-pain-points.md` | 痛みの一覧 |
+| `docs/00-discovery/06-goals.md` | ビジネスゴール (`GOAL-NN` 任意) |
+| `docs/00-discovery/07-open-questions.md` | 未確認事項 (`Q-XXX`) |
 
 書かないこと：
 - 解決方針 → Phase 1 で考える
@@ -27,12 +27,12 @@
 
 | ファイル | 内容 |
 | --- | --- |
-| `docs/01-requirement-refinement/requirement-candidates.md` | `RC-XXX` 本体 |
-| `docs/01-requirement-refinement/ambiguity-review.md` | 曖昧さ・矛盾・重複・抜けの指摘 |
-| `docs/01-requirement-refinement/scope-definition.md` | プロジェクト全体スコープと RC ごとのスコープの整合 |
-| `docs/01-requirement-refinement/requirement-classification.md` | 機能 / 非機能 / 業務ルールへの分類 |
-| `docs/01-requirement-refinement/acceptance-criteria.md` | 受入条件の起草 (Given/When/Then) |
-| `docs/01-requirement-refinement/requirement-review.md` | 5 種レビュアの集約 |
+| `docs/01-requirement-refinement/01-requirement-candidates.md` | `RC-XXX` 本体 |
+| `docs/01-requirement-refinement/02-ambiguity-review.md` | 曖昧さ・矛盾・重複・抜けの指摘 |
+| `docs/01-requirement-refinement/03-scope-definition.md` | プロジェクト全体スコープと RC ごとのスコープの整合 |
+| `docs/01-requirement-refinement/04-requirement-classification.md` | 機能 / 非機能 / 業務ルールへの分類 |
+| `docs/01-requirement-refinement/05-acceptance-criteria.md` | 受入条件の起草 (Given/When/Then) |
+| `docs/01-requirement-refinement/06-requirement-review.md` | 5 種レビュアの集約 |
 
 書かないこと：
 - 正式要件 → Phase 2 で書く
@@ -42,12 +42,12 @@
 
 | ファイル | 内容 |
 | --- | --- |
-| `docs/02-requirements/requirements.md` | インデックス・スコープ・ステークホルダー |
-| `docs/02-requirements/functional-requirements.md` | `REQ-XXX` 本体 |
-| `docs/02-requirements/non-functional-requirements.md` | `NFR-XXX` 本体 |
-| `docs/02-requirements/business-rules.md` | 業務ルール（ID なし） |
-| `docs/02-requirements/glossary.md` | 用語集 |
-| `docs/02-requirements/traceability-seed.md` | (自動生成) IDEA→REQ 索引 |
+| `docs/02-requirements/01-requirements.md` | インデックス・スコープ・ステークホルダー |
+| `docs/02-requirements/02-functional-requirements.md` | `REQ-XXX` 本体 |
+| `docs/02-requirements/03-non-functional-requirements.md` | `NFR-XXX` 本体 |
+| `docs/02-requirements/04-business-rules.md` | 業務ルール（ID なし） |
+| `docs/02-requirements/05-glossary.md` | 用語集 |
+| `docs/02-requirements/99-traceability-seed.md` | (自動生成) IDEA→REQ 索引 |
 
 書かないこと：
 - 設計レベルの詳細 → Phase 3 以降
@@ -95,7 +95,7 @@
 
 ## タスク分解(Phase 5)で書くこと
 
-`docs/30-implementation-plan/task-breakdown.md` の各 `TASK-XXX` は以下を満たすこと：
+`docs/30-implementation-plan/01-task-breakdown.md` の各 `TASK-XXX` は以下を満たすこと：
 
 - **粒度**: 1 タスク 1〜4 時間で完了する見積。超える場合は分割。
 - **入力**: そのタスクが参照する `REQ/UC/SCR/API/DB` の ID を列挙。
@@ -114,4 +114,4 @@ review ─[人間承認]─>                              approved
 approved ─[要件変更]─>                            deprecated
 ```
 
-`approved` のドキュメントを Claude が独断で変更してはならない。要件変更があれば、まず `requirements.md` の更新を促し、人間の承認を得てから下流を更新する。
+`approved` のドキュメントを Claude が独断で変更してはならない。要件変更があれば、まず `docs/02-requirements/01-requirements.md`（および関連する `02-functional-requirements.md` / `03-non-functional-requirements.md`）の更新を促し、人間の承認を得てから下流を更新する。

@@ -22,7 +22,7 @@ description: 要件素材から不足情報・曖昧さを抽出して、関係�
    - 数値: 性能・容量・件数の閾値
    - 期日: いつまでに必要か
    - 制約: 法令・既存システム・予算
-3. **質問形式** で `docs/00-discovery/open-questions.md` または `docs/01-requirement-refinement/ambiguity-review.md` に追記する。
+3. **質問形式** で `docs/00-discovery/07-open-questions.md` または `docs/01-requirement-refinement/02-ambiguity-review.md` に追記する。
 4. 質問は **YES/NO・数値・列挙のいずれかで答えられる粒度** にする。複合質問は分割する。
 
 ## 必ず守ること

@@ -11,7 +11,7 @@ argument-hint: "[RC-XXX | 範囲指定なし]"
 ## 動作
 
 1. 前提チェック:
-   - `requirement-candidates.md` に `### Status: refined` の RC が 1 件以上あるか
+   - `01-requirement-candidates.md` に `### Status: refined` の RC が 1 件以上あるか
    - 1 件も無ければ「先に `/refine-requirements` と `/review-requirements` を回してください」と案内して終了
    - 該当 RC に未解消の `Open Questions` (= `Ambiguities` セクションが空でない) が無いか確認
 2. `$ARGUMENTS` の解釈：
@@ -29,7 +29,7 @@ argument-hint: "[RC-XXX | 範囲指定なし]"
 
 ## 完了条件
 
-- `02-requirements/functional-requirements.md` または同階層に新規 `## REQ-XXX:` / `## NFR-XXX:` ブロックが追加
+- `02-requirements/02-functional-requirements.md` または同階層に新規 `## REQ-XXX:` / `## NFR-XXX:` ブロックが追加
 - 各ブロックの `### Status` が `candidate` で、`### Acceptance Criteria` が空でない
 - `### Open Questions` が空（または `(なし)`）
 - `### Related Items` に元の `RC-XXX` が含まれる

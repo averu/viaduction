@@ -34,4 +34,4 @@ updated: 2026-04-30
 ## 参照
 
 - 上流: 一次インタビュー
-- 下流: `docs/02-requirements/requirements.md` の「ステークホルダー」表
+- 下流: `docs/02-requirements/01-requirements.md` の「ステークホルダー」表

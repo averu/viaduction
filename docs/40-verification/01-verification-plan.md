@@ -34,5 +34,5 @@ updated: 2026-04-30
 
 ## 参照
 
-- 上流: `docs/02-requirements/functional-requirements.md` の各 REQ の Acceptance Criteria
-- 下流: `verification-results.md`
+- 上流: `docs/02-requirements/02-functional-requirements.md` の各 REQ の Acceptance Criteria
+- 下流: `02-verification-results.md`

@@ -14,7 +14,7 @@ model: inherit
 起動直後に **以下を順に検証** し、いずれかに失敗したら即座に停止して理由を返します：
 
 1. プロンプトに `TASK-XXX` 形式の ID が **ちょうど 1 つ** 含まれているか。
-2. その ID が `docs/30-implementation-plan/task-breakdown.md` に存在するか。
+2. その ID が `docs/30-implementation-plan/01-task-breakdown.md` に存在するか。
 3. その TASK の `状態` が `ready`（または `in-progress`）か。`blocked` / `deprecated` / `done` は不可。
 4. その TASK の `依存` 欄にある先行 TASK がすべて `done` か。
 5. その TASK が参照する `REQ/UC/SCR/API/DB` がすべて `approved` か。
@@ -31,7 +31,7 @@ model: inherit
 
 ## 入力（条件を満たした場合）
 
-- `docs/30-implementation-plan/task-breakdown.md` の該当 TASK セクション
+- `docs/30-implementation-plan/01-task-breakdown.md` の該当 TASK セクション
 - TASK が参照する `REQ/UC/SCR/API/DB` のドキュメント
 - 既存のソースコード（`src/`, `tests/`）
 

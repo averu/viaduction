@@ -13,9 +13,9 @@ updated: 2026-04-30
 
 | 分類 | 振り分け先 |
 | --- | --- |
-| 機能要件 | `02-requirements/functional-requirements.md` の `REQ-XXX` |
-| 非機能要件 | `02-requirements/non-functional-requirements.md` の `NFR-XXX` |
-| 業務ルール | `02-requirements/business-rules.md` |
+| 機能要件 | `02-requirements/02-functional-requirements.md` の `REQ-XXX` |
+| 非機能要件 | `02-requirements/03-non-functional-requirements.md` の `NFR-XXX` |
+| 業務ルール | `02-requirements/04-business-rules.md` |
 
 ## 分類表
 
@@ -33,5 +33,5 @@ updated: 2026-04-30
 
 ## 参照
 
-- 上流: `requirement-candidates.md`
-- 下流: `02-requirements/functional-requirements.md`, `non-functional-requirements.md`, `business-rules.md`
+- 上流: `01-requirement-candidates.md`
+- 下流: `02-requirements/02-functional-requirements.md`, `03-non-functional-requirements.md`, `04-business-rules.md`

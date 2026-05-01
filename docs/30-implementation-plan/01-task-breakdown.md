@@ -69,4 +69,4 @@ updated: 2026-04-30
 
 ## マイルストーン振り分け
 
-`docs/30-implementation-plan/milestones.md` を参照。各 TASK は 1 つ以上のマイルストーンに紐づく。
+`docs/30-implementation-plan/02-milestones.md` を参照。各 TASK は 1 つ以上のマイルストーンに紐づく。

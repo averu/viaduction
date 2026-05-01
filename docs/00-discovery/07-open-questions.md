@@ -34,5 +34,5 @@ updated: 2026-04-30
 
 ## 参照
 
-- 上流: `idea-notes.md`, `pain-points.md`, `current-workflow.md`
+- 上流: `01-idea-notes.md`, `05-pain-points.md`, `04-current-workflow.md`
 - 下流: 解決した質問は次フェーズの `RC-XXX` 起票に反映される

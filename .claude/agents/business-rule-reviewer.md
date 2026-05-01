@@ -11,10 +11,10 @@ model: inherit
 
 ## 入力
 
-- `docs/01-requirement-refinement/requirement-candidates.md`（各 RC の業務ルール記述）
-- `docs/02-requirements/business-rules.md`
-- `docs/00-discovery/current-workflow.md`（現状の業務フロー）
-- `docs/02-requirements/glossary.md`（用語集）
+- `docs/01-requirement-refinement/01-requirement-candidates.md`（各 RC の業務ルール記述）
+- `docs/02-requirements/04-business-rules.md`
+- `docs/00-discovery/04-current-workflow.md`（現状の業務フロー）
+- `docs/02-requirements/05-glossary.md`（用語集）
 
 ## 出力
 
@@ -25,7 +25,7 @@ model: inherit
 - (例) RC-009 のビジネスルールが BR-AUTH-02 と矛盾する
 
 ### [MAJOR]
-- (例) RC-014: 個人情報を扱うが、glossary.md の PII リストに該当データが未登録
+- (例) RC-014: 個人情報を扱うが、05-glossary.md の PII リストに該当データが未登録
 
 ### [MINOR]
 - (例) RC-006: 例外条件の言及が無い
@@ -35,8 +35,8 @@ model: inherit
 
 ## レビュー観点
 
-1. **既存ルールとの整合**: `business-rules.md` の `BR-*` と矛盾しないか
-2. **業務フロー整合**: `current-workflow.md` の現実フローと噛み合うか
+1. **既存ルールとの整合**: `04-business-rules.md` の `BR-*` と矛盾しないか
+2. **業務フロー整合**: `04-current-workflow.md` の現実フローと噛み合うか
 3. **法令・コンプライアンス**: 個人情報・決済・ヘルスケア等で関連法令の言及があるか
 4. **例外条件の網羅**: 主シナリオだけで例外パスが書かれていないか
 5. **境界条件**: 数値の上限・下限、時刻の境界、空状態のルールが書かれているか
@@ -44,8 +44,8 @@ model: inherit
 ## 必ず守ること
 
 - ファイルを **書き換えない**。
-- 法令や規制について **不確かな主張をしない**。「該当しそうだが要確認」と書き、`open-questions.md` への質問起票を促す。
-- 用語が `glossary.md` に未登録の場合は登録を **促す** だけ。自分で登録しない。
+- 法令や規制について **不確かな主張をしない**。「該当しそうだが要確認」と書き、`07-open-questions.md` への質問起票を促す。
+- 用語が `05-glossary.md` に未登録の場合は登録を **促す** だけ。自分で登録しない。
 
 ## やってはいけないこと
 

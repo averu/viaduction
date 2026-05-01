@@ -79,5 +79,5 @@ approved
 
 ## 参照
 
-- 上流: `docs/01-requirement-refinement/requirement-classification.md`
+- 上流: `docs/01-requirement-refinement/04-requirement-classification.md`
 - 下流: `docs/10-basic-design/06-non-functional.md`、各設計ドキュメント

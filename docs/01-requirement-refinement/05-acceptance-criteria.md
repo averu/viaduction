@@ -9,7 +9,7 @@ updated: 2026-04-30
 # 受け入れ条件の起草
 
 各 `RC-XXX` の `Acceptance Criteria Draft` を **観測可能な条件** に書き直す作業場。
-ここで磨いた受入条件は、`02-requirements/functional-requirements.md` の `### Acceptance Criteria` にコピーされる。
+ここで磨いた受入条件は、`02-requirements/02-functional-requirements.md` の `### Acceptance Criteria` にコピーされる。
 
 ## 望ましい形式
 
@@ -49,5 +49,5 @@ updated: 2026-04-30
 
 ## 参照
 
-- 上流: `requirement-candidates.md` の各 RC の `Acceptance Criteria Draft`
-- 下流: `02-requirements/functional-requirements.md` の `### Acceptance Criteria`
+- 上流: `01-requirement-candidates.md` の各 RC の `Acceptance Criteria Draft`
+- 下流: `02-requirements/02-functional-requirements.md` の `### Acceptance Criteria`

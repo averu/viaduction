@@ -9,7 +9,7 @@ updated: 2026-04-30
 # 要件候補 (RC-XXX)
 
 `docs/00-discovery/` の素材から起票された **要件候補**。
-ここはあくまで **候補** であり、実装対象になるためには `docs/02-requirements/functional-requirements.md` 等の `REQ-XXX (approved)` まで昇格する必要がある。
+ここはあくまで **候補** であり、実装対象になるためには `docs/02-requirements/02-functional-requirements.md` 等の `REQ-XXX (approved)` まで昇格する必要がある。
 
 > **検証ルール（`validate-traceability.ts`）**:
 > - `TASK` が `RC-XXX` を直接参照すると **error**
@@ -41,7 +41,7 @@ updated: 2026-04-30
 >
 > ### Ambiguities
 > - 曖昧な点
-> - 未確認事項（質問は `docs/00-discovery/open-questions.md` に転記する）
+> - 未確認事項（質問は `docs/00-discovery/07-open-questions.md` に転記する）
 >
 > ### Scope
 > In:
@@ -80,7 +80,7 @@ updated: 2026-04-30
 - 連続失敗時のロック方針は別途確認 (`Ambiguities` 参照)
 
 ### Ambiguities
-- 連続失敗時のロック回数・ロック期間が未定義 → `docs/00-discovery/open-questions.md` Q-001 で確認中
+- 連続失敗時のロック回数・ロック期間が未定義 → `docs/00-discovery/07-open-questions.md` Q-001 で確認中
 - 多要素認証は今回入れるか未確認 → 同 Q-002
 
 ### Scope
@@ -104,5 +104,5 @@ refined
 
 ## 参照
 
-- 上流: `docs/00-discovery/idea-notes.md` / `problem-statement.md`
-- 下流: `docs/02-requirements/functional-requirements.md` の `REQ-XXX`
+- 上流: `docs/00-discovery/01-idea-notes.md` / `02-problem-statement.md`
+- 下流: `docs/02-requirements/02-functional-requirements.md` の `REQ-XXX`

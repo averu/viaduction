@@ -7,12 +7,12 @@
 
 | ファイル | 内容 |
 | --- | --- |
-| `requirement-candidates.md` | `RC-XXX` の本体。候補要件を書き連ねる |
-| `ambiguity-review.md` | 曖昧さ・矛盾・重複の指摘リスト |
-| `scope-definition.md` | スコープ内 / スコープ外の議論経緯 |
-| `requirement-classification.md` | 機能・非機能・業務ルールへの分類 |
-| `acceptance-criteria.md` | 受け入れ条件 (Given/When/Then) の起草 |
-| `requirement-review.md` | レビュア Subagent からの指摘の集約 |
+| `01-requirement-candidates.md` | `RC-XXX` の本体。候補要件を書き連ねる |
+| `02-ambiguity-review.md` | 曖昧さ・矛盾・重複の指摘リスト |
+| `03-scope-definition.md` | スコープ内 / スコープ外の議論経緯 |
+| `04-requirement-classification.md` | 機能・非機能・業務ルールへの分類 |
+| `05-acceptance-criteria.md` | 受け入れ条件 (Given/When/Then) の起草 |
+| `06-requirement-review.md` | レビュア Subagent からの指摘の集約 |
 
 ## 進め方
 

@@ -11,9 +11,9 @@ argument-hint: "[IDEA-XXX | PROB-XXX | 範囲指定なし]"
 ## 動作
 
 1. 前提チェック:
-   - `docs/00-discovery/idea-notes.md` または `problem-statement.md` に `IDEA-XXX` / `PROB-XXX` が 1 件以上存在するか
+   - `docs/00-discovery/01-idea-notes.md` または `02-problem-statement.md` に `IDEA-XXX` / `PROB-XXX` が 1 件以上存在するか
    - 無ければ `/discover-requirements` を案内して終了
-   - `docs/00-discovery/open-questions.md` に `open` の質問が大量に残っていれば、「先に `/interview-requirements` の回答を済ませることを推奨」と警告（継続は可）
+   - `docs/00-discovery/07-open-questions.md` に `open` の質問が大量に残っていれば、「先に `/interview-requirements` の回答を済ませることを推奨」と警告（継続は可）
 2. `$ARGUMENTS` の解釈：
    - 空 → 未着手の IDEA / PROB すべてを対象
    - `IDEA-XXX` / `PROB-XXX` → その ID から派生する RC のみ起票
@@ -27,7 +27,7 @@ argument-hint: "[IDEA-XXX | PROB-XXX | 範囲指定なし]"
 
 ## 完了条件
 
-- `requirement-candidates.md` に新規 `RC-XXX` が 1 件以上追加されている
+- `01-requirement-candidates.md` に新規 `RC-XXX` が 1 件以上追加されている
 - すべての新規 RC の `### Status` が `candidate`
 - `validate-traceability.ts` の error が 0
 

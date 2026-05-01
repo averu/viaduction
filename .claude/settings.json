@@ -35,8 +35,8 @@
       "Bash(yarn install:*)",
       "Write(docs/02-requirements/**)",
       "Edit(docs/02-requirements/**)",
-      "Write(docs/40-verification/acceptance-sign-off.md)",
-      "Edit(docs/40-verification/acceptance-sign-off.md)"
+      "Write(docs/40-verification/03-acceptance-sign-off.md)",
+      "Edit(docs/40-verification/03-acceptance-sign-off.md)"
     ],
     "deny": [
       "Bash(rm -rf *)",

@@ -11,8 +11,8 @@ argument-hint: "[discovery | refinement]"
 ## 動作
 
 1. `$ARGUMENTS` の解釈：
-   - 空または `discovery` → `docs/00-discovery/*.md` を対象に `open-questions.md` へ追記
-   - `refinement` → `docs/01-requirement-refinement/*.md` を対象に `ambiguity-review.md` へ追記
+   - 空または `discovery` → `docs/00-discovery/*.md` を対象に `07-open-questions.md` へ追記
+   - `refinement` → `docs/01-requirement-refinement/*.md` を対象に `02-ambiguity-review.md` へ追記
 2. `Agent(subagent_type=requirement-interviewer)` を呼ぶ。
 3. Subagent が抽出した質問の件数・重要度別の内訳を提示。
 4. 「これらの質問に回答してから `/refine-requirements` を実行してください」と促す。

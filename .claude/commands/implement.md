@@ -14,7 +14,7 @@ argument-hint: "TASK-XXX"
    - 正規表現 `^TASK-\d{3,}$` に一致する **ちょうど 1 つ** を受け付ける。
    - 一致しない、または複数あれば次のメッセージを返して終了：
      > `/implement TASK-XXX` の形式で **1 つだけ** TASK-ID を指定してください。複数の TASK を一度に実装することはできません。
-2. `Bash(grep -n "$ARGUMENTS" docs/30-implementation-plan/task-breakdown.md)` で TASK の存在を確認。
+2. `Bash(grep -n "$ARGUMENTS" docs/30-implementation-plan/01-task-breakdown.md)` で TASK の存在を確認。
 3. `Agent(subagent_type=implementer)` に `TASK-XXX` を渡して実装を依頼。
 4. Subagent からの「変更ファイル」「完了条件チェック結果」をそのまま提示。
 5. コミット案 (`git add` / `git commit`) は **提示するだけ**、実行は人間の確認を得る（`settings.json` で ask）。

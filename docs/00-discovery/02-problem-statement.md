@@ -8,7 +8,7 @@ updated: 2026-04-30
 
 # 解決したい課題 (PROB-XXX)
 
-「何を解決したいか」をアクター視点で記述する。`pain-points.md` のうち、
+「何を解決したいか」をアクター視点で記述する。`05-pain-points.md` のうち、
 解決対象として扱う合意のとれたものをここで `PROB-XXX` として採番する。
 
 ## PROB 雛形
@@ -35,7 +35,7 @@ updated: 2026-04-30
 >
 > ### Related
 > - IDEA-XXX
-> - pain-points.md の該当項目
+> - 05-pain-points.md の該当項目
 >
 > ### Status
 > candidate
@@ -76,5 +76,5 @@ candidate
 
 ## 参照
 
-- 上流: `idea-notes.md`, `pain-points.md`
-- 下流: `docs/01-requirement-refinement/requirement-candidates.md` の `RC-XXX` (Source 欄)
+- 上流: `01-idea-notes.md`, `05-pain-points.md`
+- 下流: `docs/01-requirement-refinement/01-requirement-candidates.md` の `RC-XXX` (Source 欄)

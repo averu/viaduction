@@ -38,5 +38,5 @@ updated: 2026-04-30
 
 ## 進捗の見方
 
-- `task-breakdown.md` の状態と、ここのマイルストーン定義を突き合わせて見る。
+- `01-task-breakdown.md` の状態と、ここのマイルストーン定義を突き合わせて見る。
 - 進捗の機械的なレポートは `npx tsx scripts/validate-traceability.ts` の出力に含まれる。

@@ -52,9 +52,9 @@
 
 - 起動には **`TASK-XXX` の指定が必須**。指定が無いまま `src/**` を編集する依頼が来た場合、`implementer` は次のように応答して停止する：
 
-  > このタスクには `TASK-XXX` が指定されていません。`docs/30-implementation-plan/task-breakdown.md` から該当する TASK-ID を選んで `/implement TASK-XXX` で再度ご依頼ください。
+  > このタスクには `TASK-XXX` が指定されていません。`docs/30-implementation-plan/01-task-breakdown.md` から該当する TASK-ID を選んで `/implement TASK-XXX` で再度ご依頼ください。
 
-- 指定された TASK が `task-breakdown.md` に存在しない、または `status: blocked` の場合も停止する。
+- 指定された TASK が `01-task-breakdown.md` に存在しない、または `status: blocked` の場合も停止する。
 
 ## レビュア系 Subagent の制約
 

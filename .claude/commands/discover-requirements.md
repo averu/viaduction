@@ -12,7 +12,7 @@ argument-hint: ""
 
 1. 前提チェック:
    - `docs/00-discovery/` 配下に少なくとも 1 ファイルが存在し、何らかの素材が書かれているか
-   - 素材が無ければ「`docs/00-discovery/idea-notes.md` 等にラフメモを書いてから再実行してください」と案内して終了
+   - 素材が無ければ「`docs/00-discovery/01-idea-notes.md` 等にラフメモを書いてから再実行してください」と案内して終了
 2. `Agent(subagent_type=requirement-analyst)` を呼ぶ。
    - 引数 `$ARGUMENTS` は無視（フェーズ全体を対象にするため）
 3. Subagent が `idea-to-requirement-candidates` Skill 経由で `IDEA-XXX` `PROB-XXX` を採番。
@@ -25,7 +25,7 @@ argument-hint: ""
 
 ## 完了条件
 
-- `idea-notes.md` または `problem-statement.md` に `IDEA-XXX` または `PROB-XXX` が 1 件以上採番されている
+- `01-idea-notes.md` または `02-problem-statement.md` に `IDEA-XXX` または `PROB-XXX` が 1 件以上採番されている
 - `validate-traceability.ts` が error を返さない
 
 ## 関連コマンド

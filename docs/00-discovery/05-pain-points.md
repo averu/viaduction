@@ -34,5 +34,5 @@ updated: 2026-04-30
 
 ## 参照
 
-- 上流: 一次観察、`current-workflow.md`
-- 下流: `problem-statement.md` の `PROB-XXX`
+- 上流: 一次観察、`04-current-workflow.md`
+- 下流: `02-problem-statement.md` の `PROB-XXX`

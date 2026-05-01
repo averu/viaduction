@@ -46,7 +46,7 @@
 ## ログ
 
 - 構造化ログ（JSON）を基本とする。
-- PII（個人情報）をログに乗せない。`docs/02-requirements/glossary.md` の PII リストを参照。
+- PII（個人情報）をログに乗せない。`docs/02-requirements/05-glossary.md` の PII リストを参照。
 
 ## バージョン管理
 

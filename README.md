@@ -23,7 +23,7 @@
 [Phase 4] 詳細設計      docs/20-detail-design/
    │  /detail-design → 1 ID 1 ファイルで生成
    ▼
-[Phase 5] タスク分解    docs/30-implementation-plan/task-breakdown.md
+[Phase 5] タスク分解    docs/30-implementation-plan/01-task-breakdown.md
    │  /task-breakdown → TASK-XXX を起こす
    ▼
 [Phase 6] 実装          src/, tests/
@@ -74,7 +74,7 @@ npm install
 
 Claude Code 内で：
 
-1. 人間が `docs/00-discovery/idea-notes.md` `pain-points.md` 等にラフメモを書く。
+1. 人間が `docs/00-discovery/01-idea-notes.md` `05-pain-points.md` 等にラフメモを書く。
 2. `/discover-requirements` — IDEA-XXX / PROB-XXX を採番。
 3. `/interview-requirements` — 不明点を質問化。人間が回答。
 4. `/refine-requirements` — RC-XXX を起票して整理。
@@ -131,7 +131,7 @@ candidate (REQ) ─[人間承認]─> approved ─[実装]─> implemented ─[�
 # 検証のみ (終了コード: 0=OK / 1=ERR / 2=WARN)
 npm run trace
 
-# 99-traceability.md / traceability-seed.md を再生成
+# 99-traceability.md / 99-traceability-seed.md を再生成
 npm run trace:emit
 
 # JSON で出力 (CI 連携用)

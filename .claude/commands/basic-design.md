@@ -11,7 +11,7 @@ argument-hint: "[セクション名 (省略可)]"
 ## 動作
 
 1. 前提チェック:
-   - `docs/02-requirements/requirements.md` が存在し、最低 1 件の `REQ-XXX` が定義されているか
+   - `docs/02-requirements/01-requirements.md` が存在し、最低 1 件の `REQ-XXX` が定義されているか
    - 存在しなければ `/req-init` を案内して終了
 2. `Agent(subagent_type=basic-design-architect)` を呼ぶ。
    - 引数 `$ARGUMENTS` が空 → 全 6 ファイルの再点検を依頼

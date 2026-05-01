@@ -94,6 +94,6 @@ TEST ──> {REQ, UC} を検証
 
 ## 困ったとき
 
-- 要件が曖昧なら **自分で書き足さず**、`docs/00-discovery/open-questions.md` または `docs/01-requirement-refinement/ambiguity-review.md` に質問を残す。
+- 要件が曖昧なら **自分で書き足さず**、`docs/00-discovery/07-open-questions.md` または `docs/01-requirement-refinement/02-ambiguity-review.md` に質問を残す。
 - 要件のステータスが `approved` になっていなければ実装に進まない。レビュア Subagent (`/review-requirements`) を回す。
 - 自分の出力に自信が無いとき、対応するレビュア Subagent を呼んで第三者レビューを受ける。

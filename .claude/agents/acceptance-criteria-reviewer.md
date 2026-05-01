@@ -11,9 +11,9 @@ model: inherit
 
 ## 入力
 
-- `docs/01-requirement-refinement/requirement-candidates.md`
-- `docs/01-requirement-refinement/acceptance-criteria.md`
-- `docs/02-requirements/functional-requirements.md`（既に REQ 化されたもの）
+- `docs/01-requirement-refinement/01-requirement-candidates.md`
+- `docs/01-requirement-refinement/05-acceptance-criteria.md`
+- `docs/02-requirements/02-functional-requirements.md`（既に REQ 化されたもの）
 
 ## 出力
 

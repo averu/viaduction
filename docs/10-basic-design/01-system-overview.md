@@ -66,5 +66,5 @@ updated: 2026-04-30
 
 ## 参照
 
-- 上流: `docs/02-requirements/requirements.md` の REQ-001
+- 上流: `docs/02-requirements/01-requirements.md` の REQ-001
 - 下流: 各 SCR/API/DB 詳細設計

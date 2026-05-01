@@ -38,7 +38,7 @@ updated: 2026-04-30
 ## 検査結果サマリ
 
 <!-- TRACE:REQ_SEED:CHECKS:START -->
-- 検査時刻: 2026-04-30T15:02:32.525Z
+- 検査時刻: 2026-04-30T18:03:19.196Z
 - 定義 ID 数: 10
 - IDEA: 1, PROB: 1, RC: 1, REQ: 1
 - Errors: 0, Warnings: 2

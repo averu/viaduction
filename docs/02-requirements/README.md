@@ -6,12 +6,12 @@
 
 | ファイル | 用途 |
 | --- | --- |
-| `requirements.md` | インデックス・スコープ・ステークホルダー・他ファイルへの索引 |
-| `functional-requirements.md` | 機能要件 (`REQ-XXX`) |
-| `non-functional-requirements.md` | 非機能要件 (`NFR-XXX`) |
-| `business-rules.md` | 業務ルール（参照される横断知識） |
-| `glossary.md` | 用語集 |
-| `traceability-seed.md` | 自動生成のトレーサビリティ索引 |
+| `01-requirements.md` | インデックス・スコープ・ステークホルダー・他ファイルへの索引 |
+| `02-functional-requirements.md` | 機能要件 (`REQ-XXX`) |
+| `03-non-functional-requirements.md` | 非機能要件 (`NFR-XXX`) |
+| `04-business-rules.md` | 業務ルール（参照される横断知識） |
+| `05-glossary.md` | 用語集 |
+| `99-traceability-seed.md` | 自動生成のトレーサビリティ索引 |
 
 ## 進め方
 

@@ -86,7 +86,7 @@ Notes:
 ```
 
 stage:
-- docs/02-requirements/functional-requirements.md
+- docs/02-requirements/02-functional-requirements.md
 
 ### 2/3: feat(auth) — implement login API handler
 

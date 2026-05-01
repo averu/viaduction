@@ -1,12 +1,12 @@
 ---
-description: 詳細設計を入力に、TASK-XXX へ分解して docs/30-implementation-plan/task-breakdown.md を更新する。
+description: 詳細設計を入力に、TASK-XXX へ分解して docs/30-implementation-plan/01-task-breakdown.md を更新する。
 allowed-tools: Read, Glob, Grep, Bash, Agent
 argument-hint: "[ID (例: SCR-001 を起点にしたタスクのみ)]"
 ---
 
 # /task-breakdown
 
-`task-planner` Subagent を呼んで、詳細設計から `TASK-XXX` を起こし、`docs/30-implementation-plan/task-breakdown.md` を更新します。
+`task-planner` Subagent を呼んで、詳細設計から `TASK-XXX` を起こし、`docs/30-implementation-plan/01-task-breakdown.md` を更新します。
 
 ## 動作
 

@@ -12,8 +12,8 @@ model: inherit
 ## 入力
 
 - `docs/10-basic-design/*.md`（特に 03/04/05）
-- `docs/02-requirements/requirements.md`
-- `docs/02-requirements/glossary.md`
+- `docs/02-requirements/01-requirements.md`
+- `docs/02-requirements/05-glossary.md`
 - `docs/20-detail-design/{screens,apis,db}/_TEMPLATE.md`
 
 ## 出力

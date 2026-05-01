@@ -19,7 +19,7 @@ argument-hint: "[ambiguity | scope | business-rule | nfr | ac | all]"
    - `nfr` → `non-functional-requirement-reviewer`
    - `ac` → `acceptance-criteria-reviewer`
 2. 各レビュアの指摘を `BLOCKER` / `MAJOR` / `MINOR` で集約。
-3. 集約結果は `docs/01-requirement-refinement/requirement-review.md` に追記する候補として提示（書き込みは人間の指示が来てから）。
+3. 集約結果は `docs/01-requirement-refinement/06-requirement-review.md` に追記する候補として提示（書き込みは人間の指示が来てから）。
 4. 総括行で「BLOCKER N 件 — refined / approved に進んでよい / 進まない」を明示。
 
 ## 引数: $ARGUMENTS

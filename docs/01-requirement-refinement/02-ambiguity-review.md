@@ -8,7 +8,7 @@ updated: 2026-04-30
 
 # 曖昧さ・矛盾・重複レビュー
 
-`requirement-candidates.md` の `RC-XXX` を `ambiguity-reviewer` Subagent が読み、
+`01-requirement-candidates.md` の `RC-XXX` を `ambiguity-reviewer` Subagent が読み、
 曖昧さ・矛盾・重複・抜け漏れを指摘するための置き場。
 
 ## 指摘一覧
@@ -38,9 +38,9 @@ updated: 2026-04-30
 ## 指摘の書き方
 
 - 「RC-001 の Acceptance Criteria Draft 第 2 項目: 『高速に』が曖昧 → 数値目標を明示すること」のように、**該当箇所と望ましい修正の両方** を書く。
-- 修正そのものはこのファイルでは行わず、`requirement-candidates.md` を更新する形で反映する。
+- 修正そのものはこのファイルでは行わず、`01-requirement-candidates.md` を更新する形で反映する。
 
 ## 参照
 
-- 上流: `requirement-candidates.md`
-- 下流: 修正反映後の `requirement-candidates.md` の各 RC
+- 上流: `01-requirement-candidates.md`
+- 下流: 修正反映後の `01-requirement-candidates.md` の各 RC

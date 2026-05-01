@@ -34,7 +34,7 @@ argument-hint: "[--split | --single]"
 ヘッダ: docs(requirements): add login REQ template
 本文 / footer: ...
 git add 対象:
-- docs/02-requirements/functional-requirements.md
+- docs/02-requirements/02-functional-requirements.md
 
 ### 2/3: feat(auth) — implement login API handler
 ...
@@ -44,7 +44,7 @@ git add 対象:
 
 ## 承認後の実行コマンド案
 ```bash
-git add docs/02-requirements/functional-requirements.md
+git add docs/02-requirements/02-functional-requirements.md
 git commit -F .claude/.commit-msg-1.txt   # ※ 一時ファイル経由を推奨
 
 git add src/api/auth/login.ts

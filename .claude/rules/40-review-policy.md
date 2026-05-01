@@ -7,8 +7,8 @@
 | 種別 | 担当 | 入力 | 出力 |
 | --- | --- | --- | --- |
 | 曖昧さレビュー | `ambiguity-reviewer` | RC-XXX | 指摘リスト |
-| スコープレビュー | `scope-reviewer` | RC-XXX + scope-definition.md | 指摘リスト |
-| 業務ルールレビュー | `business-rule-reviewer` | RC/REQ + business-rules.md | 指摘リスト |
+| スコープレビュー | `scope-reviewer` | RC-XXX + 03-scope-definition.md | 指摘リスト |
+| 業務ルールレビュー | `business-rule-reviewer` | RC/REQ + 04-business-rules.md | 指摘リスト |
 | 非機能要件レビュー | `non-functional-requirement-reviewer` | RC/NFR | 指摘リスト |
 | 受入条件レビュー | `acceptance-criteria-reviewer` | RC/REQ の AC | 指摘リスト |
 | 設計レビュー | `design-reviewer` | 基本/詳細設計 md | 指摘リスト（影響度付き） |
@@ -32,7 +32,7 @@
 1. **トレーサビリティ整合性**: Front-matter の `refs.upstream` が要件・上位設計に存在するか
 2. **要件カバレッジ**: 該当 ID の要件項目をすべて満たす設計になっているか
 3. **曖昧さ**: `??`、`TBD`、`おそらく`、`〜と思われる` を残していないか
-4. **一貫性**: 用語が `glossary.md` と一致するか
+4. **一貫性**: 用語が `05-glossary.md` と一致するか
 5. **抜け**: エラー系・空状態・権限のない場合などの考慮があるか
 6. **過剰**: 要件にない機能が紛れていないか
 

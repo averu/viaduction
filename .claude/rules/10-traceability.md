@@ -4,16 +4,16 @@
 
 | 接頭辞 | 種別 | 置き場所 | 採番者 |
 | --- | --- | --- | --- |
-| `IDEA-XXX` | アイデア | `docs/00-discovery/idea-notes.md` | `requirement-analyst` |
-| `PROB-XXX` | 解決したい課題 | `docs/00-discovery/problem-statement.md` | `requirement-analyst` |
-| `RC-XXX` | 要件候補 | `docs/01-requirement-refinement/requirement-candidates.md` | `requirement-analyst` |
-| `REQ-XXX` | 機能要件 | `docs/02-requirements/functional-requirements.md` または `requirements.md` | 人間が承認 |
-| `NFR-XXX` | 非機能要件 | `docs/02-requirements/non-functional-requirements.md` | 人間が承認 |
+| `IDEA-XXX` | アイデア | `docs/00-discovery/01-idea-notes.md` | `requirement-analyst` |
+| `PROB-XXX` | 解決したい課題 | `docs/00-discovery/02-problem-statement.md` | `requirement-analyst` |
+| `RC-XXX` | 要件候補 | `docs/01-requirement-refinement/01-requirement-candidates.md` | `requirement-analyst` |
+| `REQ-XXX` | 機能要件 | `docs/02-requirements/02-functional-requirements.md`（索引は `01-requirements.md`） | 人間が承認 |
+| `NFR-XXX` | 非機能要件 | `docs/02-requirements/03-non-functional-requirements.md` | 人間が承認 |
 | `UC-XXX` | ユースケース | `docs/10-basic-design/01-system-overview.md` | `basic-design-architect` |
 | `SCR-XXX` | 画面 | `docs/10-basic-design/03-screen-list.md` (一覧) / `docs/20-detail-design/screens/SCR-XXX.md` (詳細) | `basic-design-architect` |
 | `API-XXX` | API エンドポイント | `docs/10-basic-design/04-api-list.md` (一覧) / `docs/20-detail-design/apis/API-XXX.md` (詳細) | `basic-design-architect` |
 | `DB-XXX` | データモデル | `docs/10-basic-design/05-data-model.md` (一覧) / `docs/20-detail-design/db/DB-XXX.md` (詳細) | `basic-design-architect` |
-| `TASK-XXX` | 実装タスク | `docs/30-implementation-plan/task-breakdown.md` | `task-planner` |
+| `TASK-XXX` | 実装タスク | `docs/30-implementation-plan/01-task-breakdown.md` | `task-planner` |
 | `TEST-XXX` | テストケース | 各タスク内、または `tests/` 配下 | `task-planner` / `implementer` |
 
 - `XXX` は **3 桁ゼロ詰め**。100 を超えたら 4 桁に拡張してよい。
@@ -32,7 +32,7 @@ TEST ──> {REQ, UC} を検証
 ```
 
 下流が上流を参照する。各設計ドキュメントの末尾に `## 参照` を必ず置く。
-逆向きのリンク（上流から下流）は `99-traceability.md` および `02-requirements/traceability-seed.md` に集約する。
+逆向きのリンク（上流から下流）は `99-traceability.md` および `02-requirements/99-traceability-seed.md` に集約する。
 
 ## 要件ライフサイクルのステータス
 
@@ -93,8 +93,8 @@ updated: 2026-04-30
 `refs.upstream` が空の設計ドキュメントは存在してはならない（root の overview を除く）。
 要件 (`REQ-XXX` `RC-XXX` 等) の **個別ステータス** は本文の `### Status` セクションで管理し、Front-matter の `status` とは別物として扱う。
 
-## 99-traceability.md / traceability-seed.md について
+## 99-traceability.md / 99-traceability-seed.md について
 
 - `docs/10-basic-design/99-traceability.md` および `docs/20-detail-design/99-traceability.md` には設計フェーズの自動生成表を貼る。
-- `docs/02-requirements/traceability-seed.md` には IDEA → PROB → RC → REQ の連鎖と要件ステータス分布を貼る。
+- `docs/02-requirements/99-traceability-seed.md` には IDEA → PROB → RC → REQ の連鎖と要件ステータス分布を貼る。
 - 手書き編集してはならない。更新は `npx tsx scripts/validate-traceability.ts --emit` で行う。

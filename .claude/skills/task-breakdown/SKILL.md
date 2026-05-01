@@ -19,7 +19,7 @@ description: 詳細設計を入力に、実装可能な粒度の TASK-XXX に分
 
 ## 出力
 
-`docs/30-implementation-plan/task-breakdown.md` の表に行を追加する。
+`docs/30-implementation-plan/01-task-breakdown.md` の表に行を追加する。
 
 ## TASK の粒度ガイド
 
@@ -65,7 +65,7 @@ description: 詳細設計を入力に、実装可能な粒度の TASK-XXX に分
 - 設計に無い項目を TASK に入れる
 - 1 TASK に 2 つ以上の `SCR-XXX` を入れる（例外: 共通コンポーネントのみ）
 - TEST を持たない TASK を量産する。`untestable: true` の理由は明示する
-- `task-breakdown.md` の **既存行を勝手に並べ替える** （ID は固定参照されているため）
+- `01-task-breakdown.md` の **既存行を勝手に並べ替える** （ID は固定参照されているため）
 
 ## 注意
 

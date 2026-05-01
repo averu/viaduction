@@ -88,7 +88,7 @@ Out:
 
 ### Business Rules
 - パスワードは平文で保管しない（NFR-001 を参照）
-- 連続して認証に失敗した場合のロック方針は別途 `business-rules.md` に規定する
+- 連続して認証に失敗した場合のロック方針は別途 `04-business-rules.md` に規定する
 
 ### Acceptance Criteria
 - Given 登録済のメールアドレスと正しいパスワード
@@ -114,5 +114,5 @@ approved
 
 ## 参照
 
-- 上流: `docs/01-requirement-refinement/requirement-candidates.md` の RC-XXX
+- 上流: `docs/01-requirement-refinement/01-requirement-candidates.md` の RC-XXX
 - 下流: `docs/10-basic-design/01-system-overview.md` の UC-XXX

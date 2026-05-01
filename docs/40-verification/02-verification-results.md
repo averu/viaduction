@@ -8,7 +8,7 @@ updated: 2026-04-30
 
 # 検証結果
 
-`verification-plan.md` の計画に対する実績を記録する。
+`01-verification-plan.md` の計画に対する実績を記録する。
 各行は **特定時点のスナップショット** であり、後から書き換えない（不合格を再試験するときは新しい行を追加する）。
 
 ## 結果一覧
@@ -44,5 +44,5 @@ updated: 2026-04-30
 
 ## 参照
 
-- 上流: `verification-plan.md`
-- 下流: `acceptance-sign-off.md`
+- 上流: `01-verification-plan.md`
+- 下流: `03-acceptance-sign-off.md`

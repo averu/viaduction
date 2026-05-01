@@ -62,4 +62,4 @@ candidate
 ## 参照
 
 このファイルは Phase 0 の素材。上流参照は無い。
-- 下流: `docs/01-requirement-refinement/requirement-candidates.md` の `RC-XXX` (Source 欄)
+- 下流: `docs/01-requirement-refinement/01-requirement-candidates.md` の `RC-XXX` (Source 欄)

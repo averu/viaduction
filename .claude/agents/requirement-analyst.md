@@ -13,14 +13,14 @@ model: inherit
 
 - `docs/00-discovery/*.md`
 - `docs/01-requirement-refinement/*.md`（既存があれば）
-- `docs/00-discovery/open-questions.md`（解決済 Q を確認）
+- `docs/00-discovery/07-open-questions.md`（解決済 Q を確認）
 
 ## 出力
 
-- `docs/00-discovery/idea-notes.md` / `problem-statement.md` への `IDEA-XXX` `PROB-XXX` 採番
-- `docs/01-requirement-refinement/requirement-candidates.md` への `RC-XXX` 起票
-- `docs/01-requirement-refinement/scope-definition.md` の「グレーゾーン」行追加
-- `docs/01-requirement-refinement/requirement-classification.md` の分類表追記
+- `docs/00-discovery/01-idea-notes.md` / `02-problem-statement.md` への `IDEA-XXX` `PROB-XXX` 採番
+- `docs/01-requirement-refinement/01-requirement-candidates.md` への `RC-XXX` 起票
+- `docs/01-requirement-refinement/03-scope-definition.md` の「グレーゾーン」行追加
+- `docs/01-requirement-refinement/04-requirement-classification.md` の分類表追記
 
 ## 採番権限
 
@@ -36,7 +36,7 @@ model: inherit
 
 1. ID は **既存最大値 + 1** から採番。欠番は埋めない。
 2. 既存 `IDEA-XXX` `PROB-XXX` `RC-XXX` を **改名・削除しない**。重複と判明したら `Status: rejected` を付ける。
-3. 自分で **回答を埋めない**。不明点は `requirement-interviewer` に渡すか、`open-questions.md` に積む。
+3. 自分で **回答を埋めない**。不明点は `requirement-interviewer` に渡すか、`07-open-questions.md` に積む。
 4. `RC-XXX` の `### Status` は **必ず `candidate`** で開始。`refined` への昇格はレビュア通過後に **人間または専用フロー** で行う。
 5. 完了前に `Bash(npx tsx scripts/validate-traceability.ts)` を回し、未定義 ID 参照が無いことを確認。
 
@@ -46,7 +46,7 @@ model: inherit
 2. 未採番の素材を抽出 → IDEA / PROB を採番（`idea-to-requirement-candidates` Skill 参照）。
 3. `docs/01-requirement-refinement/` の現状把握（既存 RC のリスト化）。
 4. 整理・分類を `requirement-refinement` Skill の手順で実施。
-5. 重複・矛盾を `ambiguity-review.md` に記録。
+5. 重複・矛盾を `02-ambiguity-review.md` に記録。
 6. 検証スクリプト実行。
 
 ## やってはいけないこと
@@ -67,8 +67,8 @@ model: inherit
 - 重複として rejected にした RC: <件数>
 
 ## 整合性
-- 矛盾: <件数>（ambiguity-review.md に記録済）
-- スコープのグレーゾーン: <件数>（scope-definition.md に追記）
+- 矛盾: <件数>（02-ambiguity-review.md に記録済）
+- スコープのグレーゾーン: <件数>（03-scope-definition.md に追記）
 
 ## 次のアクション
 - /review-requirements で並列レビュー

@@ -31,13 +31,13 @@ flowchart LR
 - ...
 
 #### 関連 PROB
-- (このフローのどこに痛みがあるか → `pain-points.md` を参照)
+- (このフローのどこに痛みがあるか → `05-pain-points.md` を参照)
 
 ## 用語
 
-このファイル内で使う業務用語のうち、`glossary.md` に未登録のものを仮置き。
+このファイル内で使う業務用語のうち、`docs/02-requirements/05-glossary.md` に未登録のものを仮置き。
 
 ## 参照
 
 - 上流: 一次インタビュー、業務観察、既存ドキュメント
-- 下流: `docs/01-requirement-refinement/requirement-classification.md` でフロー単位の RC を整理
+- 下流: `docs/01-requirement-refinement/04-requirement-classification.md` でフロー単位の RC を整理

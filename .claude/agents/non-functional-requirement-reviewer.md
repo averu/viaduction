@@ -11,9 +11,9 @@ model: inherit
 
 ## 入力
 
-- `docs/01-requirement-refinement/requirement-candidates.md`
-- `docs/02-requirements/non-functional-requirements.md`
-- `docs/00-discovery/goals.md`（KPI と整合する非機能目標）
+- `docs/01-requirement-refinement/01-requirement-candidates.md`
+- `docs/02-requirements/03-non-functional-requirements.md`
+- `docs/00-discovery/06-goals.md`（KPI と整合する非機能目標）
 
 ## 出力
 
@@ -38,7 +38,7 @@ model: inherit
 1. **観測可能性**: 目標値が数値・比率・期間など測定可能な単位で書かれているか
 2. **計測手段**: 計測方法（ダッシュボード、ログ、CI 静的解析等）が明示されているか
 3. **網羅性**: 性能 / 可用性 / セキュリティ / プライバシー / 運用性 / アクセシビリティ のうち、要件性質上必要なカテゴリが揃っているか
-4. **根拠**: ビジネスゴール (`goals.md` の GOAL-NN) や法令と紐づくか
+4. **根拠**: ビジネスゴール (`06-goals.md` の GOAL-NN) や法令と紐づくか
 5. **トレードオフ**: 別 NFR と相反する目標値がないか（例: 高可用 SLO と低運用コスト）
 
 ## 必ず守ること

@@ -128,7 +128,7 @@ PR 本文の `Design / Requirement Impact` で「破壊的変更がある」に�
 ## Issue 連携
 
 `Closes #N` をコミット本文または PR 本文に書くと、マージ時に自動クローズされる。
-要件側の課題管理（`docs/00-discovery/open-questions.md` の `Q-XXX` など）は **Issue とは別系統**。リポジトリ運用に応じて、Issue 番号と Q-XXX の相互参照ルールを別途定めること。
+要件側の課題管理（`docs/00-discovery/07-open-questions.md` の `Q-XXX` など）は **Issue とは別系統**。リポジトリ運用に応じて、Issue 番号と Q-XXX の相互参照ルールを別途定めること。
 
 ## ドラフト PR の扱い
 

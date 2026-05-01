@@ -7,18 +7,18 @@ description: docs/00-discovery/ のラフなメモ・アイデア・痛みから
 
 ## いつ使うか
 
-- `docs/00-discovery/idea-notes.md` `pain-points.md` `current-workflow.md` などにラフな素材が書かれた直後
+- `docs/00-discovery/01-idea-notes.md` `05-pain-points.md` `04-current-workflow.md` などにラフな素材が書かれた直後
 - `/discover-requirements` コマンドが起動したとき
 - まだ `IDEA-XXX` `PROB-XXX` の採番が無い、または不足しているとき
 
 ## 何をするか
 
-1. `docs/00-discovery/` 配下の素材を読む（`idea-notes.md` `pain-points.md` `current-workflow.md` `goals.md`）。
+1. `docs/00-discovery/` 配下の素材を読む（`01-idea-notes.md` `05-pain-points.md` `04-current-workflow.md` `06-goals.md`）。
 2. **未採番の素材** を抽出する（具体的な「思いつき」「痛み」「現状の不満」）。
 3. それぞれを `IDEA-XXX` または `PROB-XXX` の雛形に当てはめて転記する。
    - **「こうしたい」** → `IDEA-XXX`
    - **「困っている」「現状こうなっている」** → `PROB-XXX`
-4. 不明点・未確認点があれば `docs/00-discovery/open-questions.md` に新しい `Q-XXX` 行を追加する。
+4. 不明点・未確認点があれば `docs/00-discovery/07-open-questions.md` に新しい `Q-XXX` 行を追加する。
 5. 採番した ID の一覧と、新しい質問の一覧をユーザに提示する。
 
 ## 必ず守ること
@@ -33,10 +33,10 @@ description: docs/00-discovery/ のラフなメモ・アイデア・痛みから
 
 | 元の素材 | どこに採番するか |
 | --- | --- |
-| 「〜があったらいいな」 | `idea-notes.md` の `IDEA-XXX` |
-| 「〜が不便」「〜で困っている」 | `pain-points.md` 経由で `problem-statement.md` の `PROB-XXX` |
-| 業務フローの記述 | `current-workflow.md` （ID なし） |
-| 「いつまでに〜したい」 | `goals.md` の `GOAL-NN` （手動採番） |
+| 「〜があったらいいな」 | `01-idea-notes.md` の `IDEA-XXX` |
+| 「〜が不便」「〜で困っている」 | `05-pain-points.md` 経由で `02-problem-statement.md` の `PROB-XXX` |
+| 業務フローの記述 | `04-current-workflow.md` （ID なし） |
+| 「いつまでに〜したい」 | `06-goals.md` の `GOAL-NN` （手動採番） |
 
 ## 出力フォーマット
 

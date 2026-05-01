@@ -13,7 +13,7 @@ argument-hint: "[basic | detail | tasks | パス]"
 1. `$ARGUMENTS` の解釈:
    - `basic` → `docs/10-basic-design/*.md` を対象
    - `detail` → `docs/20-detail-design/**/*.md` を対象
-   - `tasks` → `docs/30-implementation-plan/task-breakdown.md` を対象
+   - `tasks` → `docs/30-implementation-plan/01-task-breakdown.md` を対象
    - パス（例: `docs/20-detail-design/screens/SCR-001.md`） → 該当ファイルのみ
    - 空 → 直近で更新された設計ファイル（`Glob` で最新数個）を対象
 2. `Agent(subagent_type=design-reviewer)` を呼ぶ。

@@ -14,10 +14,10 @@ updated: 2026-04-30
 ## レビュア別の指摘
 
 ### ambiguity-reviewer の指摘
-- (詳細は `ambiguity-review.md` を参照)
+- (詳細は `02-ambiguity-review.md` を参照)
 
 ### scope-reviewer の指摘
-- 関連: `scope-definition.md`
+- 関連: `03-scope-definition.md`
 
 ### business-rule-reviewer の指摘
 -
@@ -26,7 +26,7 @@ updated: 2026-04-30
 -
 
 ### acceptance-criteria-reviewer の指摘
-- 関連: `acceptance-criteria.md`
+- 関連: `05-acceptance-criteria.md`
 
 ## 総括
 
@@ -45,4 +45,4 @@ updated: 2026-04-30
 ## 参照
 
 - 上流: 各レビュア Subagent の出力
-- 下流: 解消後の `requirement-candidates.md`
+- 下流: 解消後の `01-requirement-candidates.md`

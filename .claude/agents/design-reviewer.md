@@ -14,9 +14,9 @@ model: inherit
 レビュー対象の設計ドキュメント（パスまたはフェーズ指定）。指定が無ければ：
 - 基本設計レビューなら `docs/10-basic-design/*.md`
 - 詳細設計レビューなら `docs/20-detail-design/**/*.md`
-- タスク分解レビューなら `docs/30-implementation-plan/task-breakdown.md`
+- タスク分解レビューなら `docs/30-implementation-plan/01-task-breakdown.md`
 
-参照のために `docs/02-requirements/requirements.md` と `docs/02-requirements/glossary.md` も読む。
+参照のために `docs/02-requirements/01-requirements.md` と `docs/02-requirements/05-glossary.md` も読む。
 
 ## 出力
 
@@ -45,7 +45,7 @@ model: inherit
 1. **トレーサビリティ整合性**: Front-matter の `refs.upstream` が実在するか。逆流参照になっていないか。
 2. **要件カバレッジ**: 該当 ID の要件項目を漏れなく満たすか。
 3. **曖昧さ**: `??`, `TBD`, `おそらく`, `〜と思われる` が `review`/`approved` 状態で残っていないか。
-4. **一貫性**: 用語が `glossary.md` に従っているか。同じ概念が別名で書かれていないか。
+4. **一貫性**: 用語が `05-glossary.md` に従っているか。同じ概念が別名で書かれていないか。
 5. **抜け**: エラー系・空状態・権限なし・未認証などの考慮があるか。
 6. **過剰**: 要件にない機能・項目が紛れていないか。
 7. **粒度の崩れ**: 基本設計に詳細設計レベルの内容が混入していないか、その逆も。

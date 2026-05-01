@@ -36,4 +36,4 @@ updated: 2026-04-30
 ## 参照
 
 - 上流: ビジネス会議の議事録、経営方針
-- 下流: `docs/01-requirement-refinement/scope-definition.md`
+- 下流: `docs/01-requirement-refinement/03-scope-definition.md`

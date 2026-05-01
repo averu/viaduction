@@ -6,7 +6,7 @@
  *
  * 使い方:
  *   npx tsx scripts/validate-traceability.ts             検証のみ
- *   npx tsx scripts/validate-traceability.ts --emit      99-traceability.md / traceability-seed.md を再生成
+ *   npx tsx scripts/validate-traceability.ts --emit      99-traceability.md / 99-traceability-seed.md を再生成
  *   npx tsx scripts/validate-traceability.ts --json      JSON 出力 (CI 連携用)
  *   npx tsx scripts/validate-traceability.ts --verbose   詳細ログ
  *
@@ -775,7 +775,7 @@ function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-/** 要件フェーズの集計（02-requirements/traceability-seed.md 用）。 */
+/** 要件フェーズの集計（02-requirements/99-traceability-seed.md 用）。 */
 interface RequirementSummary {
   ideaToReq: string[][];
   rcStatus: string[][];
@@ -929,8 +929,8 @@ function emit(index: Index, issues: Issue[]): { changed: string[] } {
     /* ファイルが無ければスキップ */
   }
 
-  // 02-requirements/traceability-seed.md
-  const seed = resolve(DOCS_ROOT, "02-requirements/traceability-seed.md");
+  // 02-requirements/99-traceability-seed.md
+  const seed = resolve(DOCS_ROOT, "02-requirements/99-traceability-seed.md");
   try {
     let content = readFileSync(seed, "utf8");
     const before = content;
@@ -1007,7 +1007,7 @@ function reportText(index: Index, issues: Issue[], emittedFiles: string[]): stri
   }
 
   if (EMIT) {
-    lines.push("■ 自動生成テーブル (99-traceability.md / traceability-seed.md)");
+    lines.push("■ 自動生成テーブル (99-traceability.md / 99-traceability-seed.md)");
     if (emittedFiles.length === 0) {
       lines.push("  変更なし");
     } else {

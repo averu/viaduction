@@ -7,17 +7,17 @@ description: refined 状態の RC-XXX を、正式な REQ-XXX / NFR-XXX / 業務
 
 ## いつ使うか
 
-- `docs/01-requirement-refinement/requirement-candidates.md` の `RC-XXX (refined)` が揃った段階
+- `docs/01-requirement-refinement/01-requirement-candidates.md` の `RC-XXX (refined)` が揃った段階
 - `/specify-requirements` コマンドが起動したとき
 - レビュア Subagent からの BLOCKER がすべて解消され、人間レビューを受ける準備ができたとき
 
 ## 何をするか
 
-1. `requirement-candidates.md` から `### Status: refined` の `RC-XXX` を抽出する。
-2. `requirement-classification.md` の分類に従って振り分け：
-   - 機能要件 → `docs/02-requirements/functional-requirements.md` に `## REQ-XXX:` を追記
-   - 非機能要件 → `docs/02-requirements/non-functional-requirements.md` に `## NFR-XXX:` を追記
-   - 業務ルール → `docs/02-requirements/business-rules.md` に追記（ID 採番なし）
+1. `01-requirement-candidates.md` から `### Status: refined` の `RC-XXX` を抽出する。
+2. `04-requirement-classification.md` の分類に従って振り分け：
+   - 機能要件 → `docs/02-requirements/02-functional-requirements.md` に `## REQ-XXX:` を追記
+   - 非機能要件 → `docs/02-requirements/03-non-functional-requirements.md` に `## NFR-XXX:` を追記
+   - 業務ルール → `docs/02-requirements/04-business-rules.md` に追記（ID 採番なし）
 3. 各 `REQ-XXX` / `NFR-XXX` の必須セクションをすべて埋める：
    - `### Summary` `### Background` `### Actor` `### Scope` `### Business Rules` `### Acceptance Criteria` `### Related Items` `### Open Questions` `### Status`
 4. `### Status` は **必ず `candidate`** で出力する。`approved` にしてはならない。

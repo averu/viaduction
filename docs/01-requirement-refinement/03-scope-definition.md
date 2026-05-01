@@ -31,11 +31,11 @@ updated: 2026-04-30
 
 判定の優先順:
 
-1. ビジネスゴール (`docs/00-discovery/goals.md`) と整合するか
+1. ビジネスゴール (`docs/00-discovery/06-goals.md`) と整合するか
 2. 既知の制約条件（技術・法令・予算・期日）と矛盾しないか
 3. 他の RC のスコープ外項目と重複していないか
 
 ## 参照
 
-- 上流: `docs/00-discovery/goals.md` の GOAL、`requirement-candidates.md` の各 RC の Scope
-- 下流: `docs/02-requirements/requirements.md` の「3. スコープ」
+- 上流: `docs/00-discovery/06-goals.md` の GOAL、`01-requirement-candidates.md` の各 RC の Scope
+- 下流: `docs/02-requirements/01-requirements.md` の「3. スコープ」

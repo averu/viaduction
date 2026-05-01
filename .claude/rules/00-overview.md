@@ -23,7 +23,7 @@
 [Phase 4] Detail Design           docs/20-detail-design/{screens,apis,db}/*.md
               │
               ▼
-[Phase 5] Implementation Plan     docs/30-implementation-plan/task-breakdown.md
+[Phase 5] Implementation Plan     docs/30-implementation-plan/01-task-breakdown.md
               │
               ▼
 [Phase 6] Coding                  src/, tests/   ※TASK-ID 必須
@@ -44,7 +44,7 @@
 | 2' | (人間) | — | `REQ-XXX (candidate)` | `### Status: approved` を押す |
 | 3 | `/basic-design` | `basic-design-architect` | `REQ-XXX (approved)` | `docs/10-basic-design/*.md` |
 | 4 | `/detail-design` | `detail-design-architect` | 基本設計 | `docs/20-detail-design/*.md` |
-| 5 | `/task-breakdown` | `task-planner` | 詳細設計 | `task-breakdown.md` |
+| 5 | `/task-breakdown` | `task-planner` | 詳細設計 | `01-task-breakdown.md` |
 | 6 | `/implement TASK-XXX` | `implementer` | task の指定行 | コード + テスト |
 | 7 | (人間 + テスト) | — | 実装 | `docs/40-verification/*.md` |
 | 横断 | `/design-review` | `design-reviewer` | 任意の設計 | レビュー指摘 |

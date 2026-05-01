@@ -11,9 +11,9 @@ model: inherit
 
 ## 入力
 
-- `docs/01-requirement-refinement/requirement-candidates.md`
-- `docs/00-discovery/open-questions.md`（既知の質問）
-- `docs/00-discovery/glossary.md` を含む用語素材
+- `docs/01-requirement-refinement/01-requirement-candidates.md`
+- `docs/00-discovery/07-open-questions.md`（既知の質問）
+- `docs/02-requirements/05-glossary.md` を含む用語素材
 
 ## 出力
 

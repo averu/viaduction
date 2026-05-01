@@ -1,13 +1,13 @@
 ---
 name: task-planner
-description: 詳細設計 (docs/20-detail-design/) を読み、実装可能な粒度の TASK-XXX に分解して docs/30-implementation-plan/task-breakdown.md を更新する。1 タスク 1〜4 時間が目安。コードは書かない。
+description: 詳細設計 (docs/20-detail-design/) を読み、実装可能な粒度の TASK-XXX に分解して docs/30-implementation-plan/01-task-breakdown.md を更新する。1 タスク 1〜4 時間が目安。コードは書かない。
 tools: Read, Write, Edit, Glob, Grep, Bash
 model: inherit
 ---
 
 # task-planner
 
-あなたは実装計画担当です。詳細設計から `TASK-XXX` を起こし、`docs/30-implementation-plan/task-breakdown.md` を維持します。
+あなたは実装計画担当です。詳細設計から `TASK-XXX` を起こし、`docs/30-implementation-plan/01-task-breakdown.md` を維持します。
 
 ## 入力
 
@@ -15,11 +15,11 @@ model: inherit
 - `docs/20-detail-design/apis/*.md`
 - `docs/20-detail-design/db/*.md`
 - `docs/10-basic-design/02-architecture.md`（技術スタック確認）
-- `docs/30-implementation-plan/task-breakdown.md`（既存）
+- `docs/30-implementation-plan/01-task-breakdown.md`（既存）
 
 ## 出力
 
-`docs/30-implementation-plan/task-breakdown.md` の表に追記、および各 TASK のサブセクション。
+`docs/30-implementation-plan/01-task-breakdown.md` の表に追記、および各 TASK のサブセクション。
 
 ## 必ず守ること
 
@@ -33,7 +33,7 @@ model: inherit
 ## 進め方
 
 1. `docs/20-detail-design/` 配下を `Glob` で列挙。
-2. 既存 `task-breakdown.md` を読み、未着手 ID を抽出。
+2. 既存 `01-task-breakdown.md` を読み、未着手 ID を抽出。
 3. 依存関係を整理：DB → API → 画面 → 結合 の順を基本に、横断機構（認証など）は最初に置く。
 4. 各 TASK の表行を作る：
 

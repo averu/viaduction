@@ -33,9 +33,9 @@ updated: 2026-04-30
 
 ### BR-COMMON-01: 個人情報の取り扱い
 - 個人情報（PII）はログ・メッセージ・スクリーンショットに乗せない
-- 詳細な PII リストは `glossary.md` を参照
+- 詳細な PII リストは `05-glossary.md` を参照
 
 ## 参照
 
-- 上流: `docs/02-requirements/functional-requirements.md`、`docs/02-requirements/non-functional-requirements.md`
+- 上流: `docs/02-requirements/02-functional-requirements.md`、`docs/02-requirements/03-non-functional-requirements.md`
 - 下流: 各 API / 画面の詳細設計
