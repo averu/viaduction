@@ -8,7 +8,7 @@ model: inherit
 # document-reflection-planner
 
 あなたは反映計画の起案担当。**読み取り専用** で動作し、ドキュメントを書き換えません。
-**Reflection Plan を提示するだけ**。実反映は人間承認後に `external-input-to-docs` Skill 経由で別工程が行います。
+**Reflection Plan を提示するだけ**。実反映は人間承認後に `reflect-external-input` Skill 経由で別工程が行います。
 
 ## 入力
 

@@ -10,7 +10,7 @@
 3. **要件候補 `RC-XXX` を直接実装対象にしない**（`scripts/validate-traceability.ts` で error）。
 4. 段階を飛ばさない。Discovery → Refinement → Specification → Basic → Detail → Plan → Implement → Verify の順。
 5. 各成果物には**先頭に Front-matter** とトレーサビリティ表を必ず置く。
-6. 設計を書くときは **専用のスラッシュコマンド** を経由するか、対応する Subagent を呼ぶ。
+6. 設計を書くときは **専用の Skill (`/<skill-name>` で起動)** を経由するか、対応する Subagent を呼ぶ。
 7. **実装系の作業は `TASK-ID` が指定されたときだけ** 行う。`TASK-ID` が無いまま `src/**` を編集してはならない。
 8. 破壊的なシェル操作（`rm -rf`、強制 push、`git reset --hard` など）は禁止。
 9. すべての成果物・解説は **日本語** で出力する。コード中の識別子・コミットメッセージは英語で良い。
@@ -76,9 +76,11 @@ TEST ──> {REQ, UC} を検証
 
 ## 利用するハーネス機能
 
-- **Skills**: `idea-to-requirement-candidates` / `requirement-interview` / `requirement-refinement` / `requirement-specification` / `traceability-check` / `design-template` / `task-breakdown` / `git-commit-workflow` / `pull-request-workflow` / `external-input-intake` / `external-qa-analysis` / `external-input-to-docs` / `external-conflict-review`
+> Claude Code では Slash Command が Skill に統一された。すべての入口は **Skill** で表現される（`/<skill-name>` で手動起動、または description にマッチして自動起動）。
+
+- **Skills (入口)**: `req-init` / `discover-requirements` / `interview-requirements` / `refine-requirements` / `review-requirements` / `specify-requirements` / `basic-design` / `detail-design` / `task-breakdown` / `design-review` / `trace-check` / `implement` / `prepare-commit` / `prepare-pr` / `import-external-input` / `analyze-external-qa` / `plan-doc-reflection` / `reflect-external-input` / `review-external-conflicts`
+- **Skills (参照型)**: `design-template`
 - **Subagents**: `requirement-interviewer` / `requirement-analyst` / `ambiguity-reviewer` / `scope-reviewer` / `business-rule-reviewer` / `non-functional-requirement-reviewer` / `acceptance-criteria-reviewer` / `basic-design-architect` / `detail-design-architect` / `task-planner` / `design-reviewer` / `traceability-auditor` / `implementer` / `external-input-analyst` / `qa-traceability-reviewer` / `document-reflection-planner` / `external-conflict-reviewer`
-- **Commands**: `/discover-requirements` `/interview-requirements` `/refine-requirements` `/review-requirements` `/specify-requirements` `/req-init` `/basic-design` `/detail-design` `/task-breakdown` `/design-review` `/trace-check` `/implement` `/prepare-commit` `/prepare-pr` `/import-external-input` `/analyze-external-qa` `/plan-doc-reflection` `/reflect-external-input` `/review-external-conflicts`
 - **Hooks**: `PostToolUse` で要件・設計ドキュメント編集後にトレーサビリティの再チェックを促す
 - **Validation**: `npx tsx scripts/validate-traceability.ts`
 

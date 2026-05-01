@@ -49,9 +49,8 @@
 │   ├── CLAUDE.md              ハーネス全体の指示書
 │   ├── settings.json          permissions / hooks
 │   ├── rules/                 番号順 (00〜50) + git/github-workflow + external-input-handling
-│   ├── skills/                Claude が呼び出せる手順スキル
+│   ├── skills/                Skill 定義 (入口 19 + 参照 1。/skill-name で起動 / 自動発火)
 │   ├── agents/                Subagent 定義 (要件系 7 + 設計系 6 + 外部系 4)
-│   ├── commands/              スラッシュコマンド (要件 5 + 設計 7 + git/PR 2 + 外部 5)
 │   └── hooks/                 PostToolUse 等のシェルフック
 ├── .github/
 │   └── pull_request_template.md  PR 説明欄のテンプレート

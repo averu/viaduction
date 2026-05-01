@@ -32,9 +32,9 @@
 [Phase 7] Verification            docs/40-verification/
 ```
 
-## 各フェーズの入口（コマンド）と担当エージェント
+## 各フェーズの入口（Skill）と担当エージェント
 
-| Phase | 入口コマンド | 担当 Subagent | 入力 | 出力 |
+| Phase | 入口 Skill | 担当 Subagent | 入力 | 出力 |
 | --- | --- | --- | --- | --- |
 | 0 | `/discover-requirements` | `requirement-analyst` | `docs/00-discovery/*.md` のラフメモ | `IDEA-XXX` `PROB-XXX` 採番 |
 | 1 | `/refine-requirements` | `requirement-analyst` | IDEA / PROB | `RC-XXX` 起票 |

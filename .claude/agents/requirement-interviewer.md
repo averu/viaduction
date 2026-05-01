@@ -33,7 +33,7 @@ model: inherit
 
 1. 対象ファイル群を読み、未確定領域（アクター / 入力 / 出力 / 例外 / 数値 / 期日 / 制約）を整理する。
 2. 既存の `Q-XXX` を `Glob/Grep` で確認し、重複を避ける。
-3. `requirement-interview` Skill のフォーマットに従って質問を列挙。
+3. `interview-requirements` Skill のフォーマットに従って質問を列挙。
 4. `docs/00-discovery/07-open-questions.md` に行追加（編集 = 行追加のみ、既存行は触らない）。
 5. **Phase 1 中** の質問は `docs/01-requirement-refinement/02-ambiguity-review.md` の指摘表へ。
 

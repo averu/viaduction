@@ -44,8 +44,8 @@ model: inherit
 ## 進め方
 
 1. 人間から渡された素材を読む。
-2. `external-input-intake` Skill の手順で `SRC-XXX` `QA-XXX` を採番（PII 除去込み）。
-3. `external-qa-analysis` Skill の手順で `Extracted Meaning` `Classification` を埋める。
+2. `import-external-input` Skill の手順で `SRC-XXX` `QA-XXX` を採番（PII 除去込み）。
+3. `analyze-external-qa` Skill の手順で `Extracted Meaning` `Classification` を埋める。
 4. `Decision` / `Open Question` / `Conflict` 分類は対応するファイルに転記。
 5. 既存 REQ / RC との重複・矛盾を Grep でチェック → `Related IDs` または `CONFLICT-XXX`。
 6. 検証スクリプトを回す。

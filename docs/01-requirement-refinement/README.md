@@ -16,7 +16,7 @@
 
 ## 進め方
 
-1. `/refine-requirements` で `requirement-refinement` Skill が起動し、`requirement-analyst` が `RC-XXX` を採番する。
+1. `/refine-requirements` で `refine-requirements` Skill が起動し、`requirement-analyst` が `RC-XXX` を採番する。
 2. `/review-requirements` で各種レビュア Subagent（`ambiguity-reviewer`, `scope-reviewer`, `business-rule-reviewer`, `non-functional-requirement-reviewer`, `acceptance-criteria-reviewer`）が並列レビューする。
 3. 指摘を反映し、`RC-XXX` の `### Status` を `refined` に上げる。
 4. `/specify-requirements` で `02-requirements/` の正式テンプレに変換 → 人間が `approved` を押す。

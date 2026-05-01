@@ -43,9 +43,9 @@ model: inherit
 ## 進め方
 
 1. `docs/00-discovery/` の現状把握（既存 IDEA/PROB のリスト化）。
-2. 未採番の素材を抽出 → IDEA / PROB を採番（`idea-to-requirement-candidates` Skill 参照）。
+2. 未採番の素材を抽出 → IDEA / PROB を採番（`discover-requirements` Skill 参照）。
 3. `docs/01-requirement-refinement/` の現状把握（既存 RC のリスト化）。
-4. 整理・分類を `requirement-refinement` Skill の手順で実施。
+4. 整理・分類を `refine-requirements` Skill の手順で実施。
 5. 重複・矛盾を `02-ambiguity-review.md` に記録。
 6. 検証スクリプト実行。
 

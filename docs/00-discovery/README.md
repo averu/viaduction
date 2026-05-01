@@ -19,7 +19,7 @@
 ## 進め方
 
 1. 人間がメモやインタビュー素材を `01-idea-notes.md` `04-current-workflow.md` `05-pain-points.md` 等にラフに書く。
-2. `/discover-requirements` を実行すると `idea-to-requirement-candidates` Skill 経由で `requirement-analyst` Subagent が動き、`IDEA-XXX` `PROB-XXX` を採番する。
+2. `/discover-requirements` を実行すると `discover-requirements` Skill 経由で `requirement-analyst` Subagent が動き、`IDEA-XXX` `PROB-XXX` を採番する。
 3. 不足情報があれば `07-open-questions.md` に追記される（人間が答える）。
 4. 次フェーズ (`docs/01-requirement-refinement/`) で `RC-XXX` を起票。
 
