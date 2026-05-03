@@ -164,6 +164,8 @@ Must
 ### Status
 candidate
 
+> 注記（Q-019 判断リミット）: 提出 (submit) 時の reason テキスト必須要否は Q-019 (open) に依存。Q-019 が **Phase 2 入口** までに `answered` にならない場合は、暫定方針「提出 reason は省略可（任意）」で確定し、本 RC を `refined` 候補として進める。確定後に必須化された場合は、本 RC の AC に「reason 空での提出 server function 呼び出しは 4xx を返し status は遷移しない、AuditLog にも記録しない」を追加する（RC-012 (1) 共通）。
+
 ---
 
 ## RC-003: 公開前レビュー・承認フロー（submitted → in_review → approved/returned/rejected）
@@ -417,7 +419,11 @@ candidate
 - Given 投稿者本人ではない user / reviewer / admin / guest / auditor が再提出 server function を呼ぶ
   When 認可ヘルパーが通過する
   Then 403 を返す（再提出は投稿者本人の専権）
-- 倫理ガード再確認の AC（Q-018 確定後に追記）
+- **倫理ガード再確認の暫定 AC（Q-018 待ち、暫定方針: 再取得しない / 初回同意の継続適用）**:
+  - Given user ロールの投稿者本人が returned 状態の自身の proposal を保有し、初回提出時に PolicyAgreement を 1 件生成済（同 proposal_id に紐づく）
+    When 本文を編集し再提出 server function を呼ぶ（倫理ガードチェックボックスを再操作しない / PolicyAgreement の同意フローを再表示しない）
+    Then status が `submitted` に遷移し、`PolicyAgreement` レコードは **新規生成されない**（同 proposal_id に紐づく既存の `policy_agreement_id` がそのまま継続適用される）。AuditLog の `action=resubmit` エントリには `policy_agreement_id` フィールドが含まれず、初回 `action=submit` エントリの `policy_agreement_id` を引き継ぐ形で観測できる
+  - 注記: Q-018 が「再取得必須」で確定した場合、本 AC は反転し「再提出時にも PolicyAgreement レコードを 1 件生成」「倫理ガードチェックボックス 3 種を再確認」を AC に追加する。RC-014 と同期して再評価する。
 
 ### Ambiguities
 - 差し戻し回数の上限を設けるかは Phase 2 で確定。
@@ -516,13 +522,13 @@ visibility × viewer ロールの 15 セルマトリクス（visibility ∈ {`pr
 
 | visibility \ viewer | guest | user(他人) | user(本人) | reviewer | admin | auditor |
 | --- | --- | --- | --- | --- | --- | --- |
-| `private`   | 見えない (401) | 見えない (404) | 見える | Q-016 依存（注記参照） | 見える | Q-016 依存（注記参照） |
+| `private`   | 見えない (401) | 見えない (404) | 見える | 見えない (404、Q-016 暫定) | 見える | 見えない (404、Q-016 暫定 / メタ情報は AuditLog 経由で別途) |
 | `internal`  | 見えない (401) | 見える | 見える | 見える | 見える | 見える |
 | `public`    | 見える | 見える | 見える | 見える | 見える | 見える |
 
-- 上表の各「見えない」セルについて、loader が 401 / 403 / 404 のいずれを返すかは Phase 3 の認可ヘルパー設計時に統一する（暫定: 未ログインは 401、ログイン済の権限不足は 404 で存在自体を隠す）。
+- **ステータスコード暫定統一（Phase 3 で再評価可能）**: 上表の「見えない」セルについて、**未ログインは 401、ログイン済かつ権限不足（認可違反）は 404（リソース存在自体を隠す）** で統一する。これは表内に既に書かれた `401`（guest 行）/ `404`（user(他人) 行）と整合する暫定方針であり、Phase 3 の認可ヘルパー設計時に再評価可能とする。403（権限不足を明示）を選択しない理由は、private/internal の存在隠蔽を優先するため。
 - 一覧 loader についても上表に準拠。一覧結果には「呼び出し元 viewer から見える」proposal のみが含まれる（未承認 / draft / submitted / in_review / returned / rejected は published 経路の対象外）。
-- private 投稿の reviewer 閲覧可否、auditor の本文到達可否は Q-016 (open) に依存。確定までは「reviewer は見えない (404)」「auditor は AuditLog のメタ情報のみ閲覧、本文は到達不可」を暫定方針とする。
+- private 投稿の reviewer 閲覧可否、auditor の本文到達可否は Q-016 (open) に依存。確定までは「reviewer は見えない (404)」「auditor は AuditLog のメタ情報のみ閲覧、本文は到達不可（auditor 行も 404 で統一）」を暫定方針とする。
 
 ### Ambiguities
 - ページネーション・並び順の規約は Phase 3 で確定。
@@ -569,10 +575,12 @@ candidate
   Then 結果に submitted と in_review の双方が含まれ、admin に対しては全 visibility が含まれる。reviewer に対しては Q-016 確定までの暫定として `private` のみ除外（見えない）、`internal` / `public` は含まれる
 - Given user / guest / auditor がレビュー待ち一覧 loader を呼ぶ
   When 認可ヘルパーが通過する
-  Then 403（user / auditor）または 401（guest）を返す
+  Then **未ログイン（guest）は 401、ログイン済の権限不足（user / auditor）は 404** を返す（暫定統一: 一覧の存在自体を隠す。Phase 3 で再評価可能）
 - Given reviewer / admin がレビュー待ち一覧を呼ぶ
   When draft / approved / published / returned / rejected / withdrawn の proposal が存在する
   Then それらは結果に含まれない（submitted と in_review に限定の観測）
+
+> 脚注: ステータスコードの暫定統一は RC-009 と同じ方針（**未ログイン 401 / 認可違反 404**）。Phase 3 で 403 を選ぶ場合は RC-009 / RC-010 / RC-013 を同時に更新する。
 
 ### Ambiguities
 - フィルタ条件（カテゴリ・経過時間 など）の有無は Phase 3 で確定。
@@ -620,6 +628,8 @@ candidate
 
 ### Acceptance Criteria Draft
 ロール × 主要操作の禁止セルマトリクス。「許可」のセルは別 RC（参照列）の AC で観測。「禁止」セルは server function が **401（guest 該当）または 403** を返すことを本 RC の AC とする。
+
+> 注記（マトリクスの粒度）: 本表は **viewer 列 6 列**（guest / user(他人) / user(本人) / reviewer / admin / auditor）× **操作 11 種** で起草している。`06-requirement-review.md` で言及された「5 ロール × 8 操作」表記との差分（user(本人)/(他人) を分けて 6 列、操作に提出 / 取り下げ / 再提出 / publish を追加）は **意図的な拡張** であり、所有者一致判定（user(本人) と user(他人)）と業務フローの主要遷移を網羅する目的。Phase 2 で REQ 化する際は、本表の粒度を維持する。
 
 | 操作 / ロール                           | guest | user(他人) | user(本人) | reviewer | admin | auditor | 許可 AC の参照 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -694,7 +704,8 @@ AuditLog エントリは `actor / role / action / target proposal id / before / 
 - **(4) visibility change (縮小・拡大)**: 成功時に `action=visibility_shrink|visibility_expand, before=visibility値, after=visibility値, reason=必須, timestamp` を含むエントリが append される。reason 空は 4xx で遷移拒否。RC-005 の AC と整合。
 - **(5) withdraw (published → withdrawn)**: admin の取り下げ成功時に `action=withdraw, before=published, after=withdrawn, reason=必須, timestamp` を含むエントリが append される。reason 空は 4xx で遷移拒否。RC-006 の AC と整合。
 - **(6) resubmit (returned → submitted)**: 投稿者本人の再提出成功時に `action=resubmit, before=returned, after=submitted, reason=任意, timestamp` を含むエントリが append される。RC-007 の AC と整合。
-- **共通負の AC**: 上記 6 種の操作が認可エラーで失敗（401 / 403）する場合、AuditLog エントリは生成されない（失敗試行のログ要否は Phase 2 で別途検討、本 RC では「成功時のみ append」を AC とする）。
+- **共通負の AC（認可エラー）**: 上記 6 種の操作が認可エラーで失敗（401 / 403 / 404 のいずれか、暫定統一は RC-009 / RC-010 / RC-013 と同期）する場合、AuditLog エントリは生成されない（失敗試行のログ要否は Phase 2 で別途検討、本 RC では「成功時のみ append」を AC とする）。
+- **共通負の AC（reason 空 4xx 失敗）**: 上記 6 種のうち **reason 必須操作** ((2) review judgment / (4) visibility change / (5) withdraw、および Q-019 が「必須」で確定した場合の (1) submit) において、reason 空での呼び出しが 4xx で失敗する場合も AuditLog エントリは生成されない（reason 任意の (3) publish / (6) resubmit には適用されない）。
 - **共通 append-only AC**: AuditLog エントリの update / delete server function を呼ぶ手段が存在しない（RC-019 で観測手段を AC 化）。
 
 ### Ambiguities
@@ -717,6 +728,8 @@ Must
 
 ### Status
 candidate
+
+> 注記（Q-019 判断リミット）: (1) submit の reason 必須要否は Q-019 (open) に依存。Q-019 が **Phase 2 入口** までに `answered` にならない場合は、暫定方針「(1) submit の reason は省略可（任意）」で確定し、本 RC を `refined` 候補として進める。確定後に必須化された場合は、(1) submit の AC に「reason 空での提出 server function 呼び出しは 4xx を返し AuditLog にも記録しない」を追加し、共通負の AC（reason 必須操作の 4xx 失敗時 AuditLog 不生成）にも (1) を含める。
 
 ---
 
@@ -747,13 +760,15 @@ candidate
   Then 条件に合致するエントリのみが返される（フィルタ機能、Q-012 確定まで暫定実装可）
 - Given user / guest / reviewer が AuditLog 一覧 loader を呼ぶ
   When 認可ヘルパーが通過する
-  Then 401（guest）または 403（user / reviewer）を返す
+  Then **未ログイン（guest）は 401、ログイン済の権限不足（user / reviewer）は 404** を返す（暫定統一: AuditLog の存在自体を隠す。Phase 3 で再評価可能）
 - Given auditor が AuditLog エントリの update / delete server function を呼ぶ
   When 認可ヘルパーが通過する
-  Then 403 を返す（読み取り専用の観測。エントリ自体の不変性は RC-019 で別途強制）
+  Then **404** を返す（読み取り専用の観測。auditor は読み取り権限を持つが書き込み系のエンドポイントは存在自体を隠す。エントリ自体の不変性は RC-019 で別途強制）
 - Given auditor が AuditLog エントリ詳細 loader を呼ぶ
   When 当該エントリが `private` 投稿に紐づく
-  Then メタ情報（actor / action / target proposal id / timestamp 等）は閲覧可、投稿本文には到達できない（Q-016 暫定方針、確定後に AC を再評価）
+  Then メタ情報（actor / action / target proposal id / timestamp 等）は閲覧可、投稿本文への loader（`private` 詳細）を auditor が呼ぶと **404 を返す**（Q-016 暫定方針、確定後に AC を再評価）
+
+> 脚注: ステータスコードの暫定統一は RC-009 / RC-010 と同じ方針（**未ログイン 401 / 認可違反 404 / auditor の書き込み系 404**）。Phase 3 で 403 を選ぶ場合は RC-009 / RC-010 / RC-013 を同時に更新する。
 
 ### Ambiguities
 - フィルタ条件（actor / action / 期間）の必要性は Q-012 (open) に依存。
@@ -812,7 +827,11 @@ PolicyAgreement レコードはユーザ・投稿・同意時刻を紐付けて�
 - Given user ロールの投稿者本人が visibility = `private` を選択
   When 提出 server function を呼ぶ
   Then 提出が成功し、proposal の visibility が `private` で記録される（「非公開相談として扱う」選択肢の観測）
-- Given returned から再提出する場合の倫理ガード再確認 / PolicyAgreement 再取得の AC は Q-018 確定後に追記（RC-007 と同期）
+- **returned 再提出時の倫理ガード再確認 暫定 AC（Q-018 待ち、暫定方針: 再取得しない / 初回同意の継続適用）**:
+  - Given user ロールの投稿者本人が returned 状態の自身の proposal を保有し、初回提出時に倫理ガードチェックボックス 3 種を true にし PolicyAgreement を 1 件生成済
+    When 本文を編集し再提出 server function を呼ぶ（チェックボックス未操作 / PolicyAgreement 同意フローを再表示しない）
+    Then 提出が成功し、新規 PolicyAgreement レコードは生成されない。既存の `policy_agreement_id` が当該 proposal に対する同意の根拠として継続適用されることが、AuditLog の `action=resubmit` エントリで参照可能（`policy_agreement_id` 自体の再生成が起きていない観測）
+  - 注記: Q-018 が「再取得必須」で確定した場合、本 AC は反転し「再提出時にも倫理ガード 3 種チェック必須」「PolicyAgreement レコードを毎回新規生成」「`policy_version` を再提出時の最新版に更新」を AC に追加する。RC-007 と同期して再評価する。
 
 ### Ambiguities
 - ポリシー文のバージョン管理は Q-008 (open) に依存。
@@ -917,6 +936,7 @@ MVP は **モック認証** とする：cookie + 環境変数の許可リスト�
 ### Ambiguities
 - ログイン UI の最小構成（フォーム / クエリパラメータ / ヘッダ等）は Phase 3 で確定。
 - ユーザ識別子の PII 性は Q-001（モック認証）の最終形に依存（AMB-008 / RC-020 と整合）。
+  - **暫定方針（Q-001 答え下）**: cookie 内のユーザ識別子（`user_id` / セッション識別子）は許可リスト引きに使われる **不透明な ID（任意文字列）** であり、それ自体は PII でないものとする。仮に将来メールアドレス等を識別子として採用する場合は別途 PII として扱い、logger には `user_id_hash`（hash 値、RC-020 / RC-023 と整合）のみを出力する。
 - 多要素認証 / SSO は非ゴール。
 - 依拠する暫定回答: Q-001（モック認証）。
 
@@ -943,6 +963,7 @@ candidate
 ### Source
 - IDEA-007
 - PROB-005
+- GOAL-05
 
 ### Actor
 - システム全体（基盤）
@@ -1032,7 +1053,11 @@ UI の出し分けに依存しない認可境界を確立し、権限バイパ�
   Then `export 数 ≦ 認可拒否 E2E ケース数` の整合 check が通る（mutation 1 件あたり最低 1 件の認可拒否ケースを義務付ける。RC-011 のロール × 操作マトリクスから派生する複数ケースが理想）
 - Given 機微取得系 loader（上記暫定線引き）の各エントリ
   When 権限を持たない呼び出し元から呼ぶ E2E ケースを実行する
-  Then 401 / 403 / 404 のいずれかを返す（具体方針は Phase 3 で統一）
+  Then 401 / 403 / 404 のいずれかを返す（暫定統一: 未ログイン 401 / 認可違反 404 は RC-009 / RC-010 / RC-013 と同期。Phase 3 で 403 を選ぶ場合は同時更新）
+- **認可ヘルパー単一実装の観測 AC（grep ベース CI 検証）**:
+  - Given 認可判定を行う関数は `src/server/auth/authorize.ts` （または Phase 3 で確定する単一モジュール）に集約される設計とする
+  - When CI で `grep -rE "(role\s*===\s*['\"]|hasRole|canAccess|isAdmin|isReviewer|isAuditor)" src/server/ --exclude-dir=auth` を実行する
+  - Then マッチが 0 件であること（exit code = 1 → CI fail）。すなわち認可ヘルパー以外の場所でロール判定 / 権限判定が直接書かれていない観測。例外は ADR を起票し、grep 除外ディレクトリ追加で対応する
 
 ### Ambiguities
 - 認可ヘルパーの API（関数名 / 戻り値型）は Phase 3 で確定。
@@ -1061,6 +1086,7 @@ candidate
 ### Source
 - IDEA-005
 - PROB-004
+- GOAL-02
 
 ### Actor
 - システム全体（永続層）
@@ -1086,6 +1112,7 @@ AuditLog ストアは、書き込み（append）以外の操作（更新・削�
 - Given データ層強制（D1 の権限制御 / トリガ等）は Phase 3 で確定する旨の注記
   When Phase 3 のアーキテクチャ確定時に再検証する
   Then 採用ストアの機能で update / delete を制限する設計が `02-architecture.md` に記録される
+- **MVP 最低線とデータ層強制のトレードオフ（明示）**: 採用ストアに依存しないアプリ層強制（grep + コード規約 + repository export 制約）が **MVP の最低線**。データ層強制（D1 トリガ / 別アカウント分離 等）は **RC-024 のデータストア確定後に追補**するものであり、MVP 段階で `refined` 昇格する AC には含めない。RC-024 が D1 を採用した場合は本 RC に「`AuditLogRepository` の `update*` / `delete*` 相当 SQL がコードベースに存在しない」「D1 トリガ or 権限 GRANT で UPDATE / DELETE が拒否される」等の AC を追記する。
 
 ### Ambiguities
 - データ層強制の具体手段（D1 のトリガ / 別ストア / 別アカウント分離 等）は Phase 3 で確定。
@@ -1114,6 +1141,8 @@ candidate
 - IDEA-005
 - PROB-002
 - PROB-004
+- GOAL-01
+- GOAL-02
 
 ### Actor
 - システム全体（観測性境界）
@@ -1146,6 +1175,7 @@ candidate
 ### Ambiguities
 - 開発環境での詳細ログ出力可否は Q-015 (open) に依存。
 - ユーザ識別子の PII 性は Q-001（モック認証）の最終形に依存（AMB-008）。
+  - **暫定方針（Q-001 答え下、RC-016 と整合）**: cookie 内のユーザ識別子は不透明 ID として PII 非該当とみなし、logger には `user_id_hash`（一方向 hash 値）のみを出力する。識別子としてメールアドレスを採用する場合は PII 扱いとし、logger には絶対に出さず hash 値のみを出力する規約とする。
 - 許可フィールドリストの最終確定は Phase 3。
 
 ### Scope
@@ -1220,6 +1250,7 @@ needs-clarification
 ### Source
 - PROB-005
 - IDEA-004
+- GOAL-01
 
 ### Actor
 - システム全体（セキュリティ境界）
@@ -1240,6 +1271,7 @@ needs-clarification
 - Given mutation 系 server function が呼び出される
   When 異なるオリジンからの呼び出し（Origin 不一致 / Sec-Fetch-Site=cross-site）を観測する
   Then 403 を返す（CSRF 対策の最低線）
+  - 注記（CSRF と Cookie SameSite=Lax のトレードオフ）: `SameSite=Lax` cookie の場合、cross-site mutation はそもそも cookie がブラウザから送られないため、サーバ側の認証検証で先に弾かれる（401 相当）。**したがって本 AC の「CSRF 対策の最低線」は Origin / Sec-Fetch-Site 検証** とし、CSRF トークン方式の採用是非は Phase 3 で再評価する。`SameSite=Strict` への引き上げと CSRF トークンの併用が必要かは Phase 3 のリスク評価次第。
 - Given CI で `src/` 配下を静的解析する
   When `dangerouslySetInnerHTML` の利用を検索する
   Then 0 件、もしくは ADR でホワイトリスト化された例外のみ許容
@@ -1249,6 +1281,7 @@ needs-clarification
 
 ### Ambiguities
 - CSRF の具体実装（Origin 検証 vs CSRF トークン）は Phase 3 で確定。
+- **Cookie SameSite と CSRF 対策のいずれを最低線とするかは Phase 3 決定事項**: `SameSite=Lax` を最低線にするなら CSRF トークンは省略可、`SameSite=Strict` 強制または CSRF トークン併用にするかは脅威モデル評価次第。MVP の暫定方針は「`SameSite=Lax` + Origin / Sec-Fetch-Site 検証」。
 - CSP の最終ヘッダ値は Phase 3 で確定。
 - モック認証の cookie が発行される具体機構は RC-016 と同期。
 
@@ -1272,6 +1305,7 @@ candidate
 
 ### Source
 - GOAL-02
+- GOAL-01
 - PROB-004
 
 ### Actor
@@ -1323,7 +1357,7 @@ Must（必須フィールド・PII 除外）/ Should（集約先・保持期間�
 ### Status
 candidate
 
-> 注記: 保持期間部分の AC は Q-006 (open) に依存し、確定までは「`wrangler tail` のリアルタイム閲覧のみ」を暫定とする。Q-006 確定後に保持期間 AC を追記する。
+> 注記（保持期間部分の判断リミット）: 保持期間部分の AC は Q-006 (open) に依存し、確定までは「`wrangler tail` のリアルタイム閲覧のみ」を暫定とする。Q-006 が **Phase 2 入口** までに `answered` にならない場合は、**保持期間部分のみを `deferred` に切り出し、必須フィールド / PII 除外 / `wrangler tail` 集約部分は `candidate` のまま `refined` 候補として進める**（RC-021 と同パターン）。`deferred` への昇格は人間の確認のうえ実施する。Q-006 確定後に保持期間 AC を追記し、`deferred` 部分を再評価する。
 
 ---
 

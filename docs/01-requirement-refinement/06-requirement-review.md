@@ -3,7 +3,7 @@ id: RC-REVIEW
 title: 要件レビュー集約
 status: draft
 owners: []
-updated: 2026-05-03
+updated: 2026-05-04
 ---
 
 # 要件レビュー集約
@@ -115,6 +115,7 @@ updated: 2026-05-03
 | --- | --- | --- | --- | --- |
 | 2026-05-03 | ambiguity / scope / business-rule / nfr / acceptance-criteria | RC-002〜021 | BLOCKER 21 / MAJOR 41 / MINOR 44 | Claude (B 方針で AC + NFR 観測手段の追補、人間判断は Q-010/Q-004/Q-016/Q-017/Q-018 で待機) |
 | 2026-05-03 (第 2 回) | ambiguity / nfr / acceptance-criteria | RC-002〜RC-024（22 件） | BLOCKER 1 / MAJOR 17 / MINOR 20 → Claude が RC-024 AC を先行起草して **BLOCKER 0** | Claude (RC-024 AC 起草で BLOCKER 解消) |
+| 2026-05-04 | (Claude セルフ修正、再レビュー未実施) | RC-002 / RC-007 / RC-009 / RC-010 / RC-011 / RC-012 / RC-013 / RC-014 / RC-016 / RC-017 / RC-018 / RC-019 / RC-020 / RC-022 / RC-023 | 第 2 回残存 MAJOR 17 件 + 第 1 回 business-rule MAJOR 9 件 のうち **RC-005 拡大方向除く全件**を Claude が事前解消 | Claude (MAJOR 解消ターン) |
 
 ## 第 2 回レビュー後の状態 (2026-05-03)
 
@@ -159,7 +160,65 @@ updated: 2026-05-03
 - **AMB-001**: RC-001 サンプルの rejected 化判断
 - **横断 NFR**: 性能 / 可用性 / アクセシビリティを `deferred` か非ゴールに倒す判断
 
+## 第 2 回レビュー後の MAJOR 解消ターン (2026-05-04)
+
+第 2 回 `/review-requirements`（ambiguity / nfr / acceptance-criteria）で残った MAJOR 17 件 + 第 1 回 business-rule MAJOR 9 件のうち、**RC-005 拡大方向は意図的に未解消（needs-clarification 維持・後回し方針）** として除外し、それ以外を Claude が Phase 2 進行前に事前解消したターン。
+
+### 解消した MAJOR の番号と内容
+
+#### A. ambiguity-reviewer 第 2 回 MAJOR
+
+- **A-2 / C-3 (RC-007 倫理ガード再確認 AC)**: 暫定方針「再取得しない / 初回同意の継続適用」に基づく観測 AC を 1 件起草（PolicyAgreement レコードが再生成されない / `policy_agreement_id` が引き継がれる観測）。Q-018 確定後の AC 反転方針も末尾注記。
+- **A-3 / C-4 (RC-014 倫理ガード再確認 AC)**: 同上、RC-007 と同期した暫定方針 AC を起草。
+- **A-4 (RC-002 / RC-012 Q-019 判断リミット)**: Q-019 が Phase 2 入口までに `answered` にならない場合は「提出 reason 省略可」で確定する旨を Status 注記に追加（RC-021 / RC-023 と同パターン）。
+- **A-5 / C-5 (RC-009 / RC-010 / RC-013 ステータスコード暫定統一)**: 「未ログイン 401 / 認可違反 404（存在自体を隠す）」で 3 RC に統一する脚注を追加。RC-013 の auditor 書き込み系も 404、auditor の private 投稿本文 loader も 404 で統一。Phase 3 で 403 を選ぶ場合は 3 RC を同時更新する旨を記載。
+
+#### B. non-functional-requirement-reviewer 第 2 回 MAJOR
+
+- **B-1 (RC-023 保持期間 Status 注記)**: 「Q-006 が Phase 2 入口までに `answered` にならない場合は保持期間部分のみを `deferred` に切り出し、必須フィールド / PII 除外 / `wrangler tail` 集約部分は `candidate` 維持」を Status 注記に追加（RC-021 と同パターン）。
+- **B-2 (横断 NFR 性能 / 可用性 / アクセシビリティ)**: `docs/00-discovery/06-goals.md` で非ゴール化済（決定 4 / 2026-05-04 追加セクション）。本ターンでは MAJOR 一覧から「解消済」として記録するのみ。`04-requirement-classification.md` の「機能 / 非機能 / 業務ルール」表には行を追加していない（決定 4 で非ゴール化したため）。
+- **B-3 (RC-018 認可ヘルパー単一実装の観測手段)**: 「`grep -rE "(role\s*===\s*['\"]|hasRole|canAccess|isAdmin|isReviewer|isAuditor)" src/server/ --exclude-dir=auth` がノーマッチであること（CI fail）」を AC として 1 件追加。
+- **B-4 (RC-019 データ層強制と RC-024 のトレードオフ)**: 「採用ストアに依存しないアプリ層強制（grep + 規約 + repository export 制約）が MVP の最低線。データ層強制は RC-024 確定後に追補」を本文最後の AC として 1 行追加。
+- **B-5 (NFR RC の §Source GOAL 引用)**: RC-017 → GOAL-05、RC-019 → GOAL-02、RC-020 → GOAL-01 / GOAL-02、RC-022 → GOAL-01、RC-023 → GOAL-01 を追加。
+- **B-6 (RC-022 CSRF と Cookie SameSite=Lax のトレードオフ)**: AC2（CSRF）に注記「`SameSite=Lax` cookie の場合 cross-site mutation で cookie が送られないため、CSRF 対策の最低線は Origin / Sec-Fetch-Site 検証」を追加。Ambiguities にも「Cookie SameSite と CSRF 対策のいずれを最低線とするかは Phase 3 決定事項」を追加。
+
+#### C. acceptance-criteria-reviewer 第 2 回 MAJOR
+
+- **C-1 (RC-024 BLOCKER)**: 前ターンで Claude が直接修正済。確認済。
+- **C-3 / C-4**: A-2 / A-3 と同じ。
+- **C-5**: A-5 と同じ。
+- **C-6 (RC-011 マトリクス集計の食い違い)**: 「viewer 列 6 列 × 操作 11 種で起草。`06-requirement-review.md` の『5 ロール × 8 操作』表記との差分（user(本人)/(他人) を分けて 6 列、提出 / 取り下げ / 再提出 / publish の追加）は意図的（網羅性のため）」を AC 表冒頭に注記。
+- **C-7 (RC-012 共通負の AC 網羅性)**: 「reason 必須操作 ((2)/(4)/(5)、Q-019 確定後は (1) も) において reason 空 4xx 失敗時も AuditLog は生成されない」を共通負の AC として追加。
+
+#### D. business-rule-reviewer 第 1 回 MAJOR の解消確認
+
+- **D-1 (RC-013 auditor の投稿本文閲覧可否)**: 既に Q-016 として open 起票済、RC-013 の Ambiguities にも参照あり。確認のみ。
+- **D-2 (RC-016 / RC-020 モック認証の識別子 PII 該否)**: 両 RC の Ambiguities に「Q-001 暫定下では cookie 内のユーザ識別子は PII 非該当 / メールアドレス採用時は PII 扱い、logger には `user_id_hash` のみ」を明示する暫定方針を追加。
+- **D-3 (glossary 未登録)**: 既に AMB-015 として MAJOR 登録済。実際の `02-requirements/05-glossary.md` 編集は **Phase 2 specify 入口** で `requirement-analyst` (specify Skill) が集中対応する。本ターンでは編集しない。
+- **D-4 (適用法令範囲)**: 既に Q-017 として open 起票済。確認のみ。
+
+### 残存 MAJOR の一覧（意図的に未解消）
+
+| RC / 横断 | 残存 MAJOR | 理由 |
+| --- | --- | --- |
+| RC-005 拡大方向 | 暫定 AC 起草 (A-1 / C-2) | **後回し方針**（needs-clarification 維持）。Q-010 への人間判断と同時に Phase 2 specify 入口で対応。 |
+| `glossary.md` 未登録 (AMB-015) | 用語の集中定義 (D-3) | 実編集は Phase 2 specify 入口で `requirement-analyst` (specify Skill) が `02-requirements/05-glossary.md` で集中対応。 |
+
+### 残存 MINOR
+
+20 件（第 2 回時点）から実質変動なし。`refined` 昇格と並行して Phase 2 specify 入口までに解消する想定。
+
+### `refined` 昇格判定（更新）
+
+- `ambiguity-reviewer` (第 2 回 + 本ターン): **refined OK**
+- `non-functional-requirement-reviewer` (第 2 回 + 本ターン): **refined OK**（B-1〜B-6 解消、横断 NFR 非ゴール化済）
+- `acceptance-criteria-reviewer` (第 2 回 + 本ターン): **refined OK**（C-1〜C-7 解消）
+- `business-rule-reviewer` (第 1 回 + 本ターン): **refined OK**（D-1〜D-4 確認 / 解消）
+- `scope-reviewer` (第 1 回 BLOCKER 0): 第 2 回未実施だが BLOCKER 0 で MAJOR は scope-definition.md グレーゾーン追加で解消済の見込み
+
+**RC-005 拡大方向（needs-clarification 維持）と AMB-015 の glossary 集中対応（specify 入口で実施）を除いて、全 RC を Phase 2 specify 入口で `refined` 昇格候補として進められる状態に到達**。
+
 ## 参照
 
-- 上流: 各レビュア Subagent の出力（2026-05-03 `/review-requirements all`）
-- 下流: 解消後の `01-requirement-candidates.md`、新規起票 `RC-022` `RC-023` `RC-024`、新規 Q `Q-016`〜`Q-018`
+- 上流: 各レビュア Subagent の出力（2026-05-03 `/review-requirements all`）、2026-05-04 Claude セルフ MAJOR 解消ターン
+- 下流: 解消後の `01-requirement-candidates.md`、新規起票 `RC-022` `RC-023` `RC-024`、新規 Q `Q-016`〜`Q-019`
