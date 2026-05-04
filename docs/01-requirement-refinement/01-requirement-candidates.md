@@ -162,8 +162,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
 
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 > 注記（Q-019 判断リミット）: 提出 (submit) 時の reason テキスト必須要否は Q-019 (open) に依存。Q-019 が **Phase 2 入口** までに `answered` にならない場合は、暫定方針「提出 reason は省略可（任意）」で確定し、本 RC を `refined` 候補として進める。確定後に必須化された場合は、本 RC の AC に「reason 空での提出 server function 呼び出しは 4xx を返し status は遷移しない、AuditLog にも記録しない」を追加する（RC-012 (1) 共通）。
 
 ---
@@ -227,7 +228,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -282,7 +285,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -389,7 +394,9 @@ Out:
 Should
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -443,7 +450,9 @@ Out:
 Should
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -490,7 +499,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -549,7 +560,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -600,7 +613,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -667,7 +682,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -727,8 +744,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
 
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 > 注記（Q-019 判断リミット）: (1) submit の reason 必須要否は Q-019 (open) に依存。Q-019 が **Phase 2 入口** までに `answered` にならない場合は、暫定方針「(1) submit の reason は省略可（任意）」で確定し、本 RC を `refined` 候補として進める。確定後に必須化された場合は、(1) submit の AC に「reason 空での提出 server function 呼び出しは 4xx を返し AuditLog にも記録しない」を追加し、共通負の AC（reason 必須操作の 4xx 失敗時 AuditLog 不生成）にも (1) を含める。
 
 ---
@@ -790,7 +808,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -851,7 +871,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -898,7 +920,9 @@ Out:
 Should
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -954,7 +978,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -1009,7 +1035,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -1077,7 +1105,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -1131,7 +1161,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -1190,7 +1222,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -1297,7 +1331,9 @@ Out:
 Must
 
 ### Status
-candidate
+refined
+
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
 
 ---
 
@@ -1355,9 +1391,10 @@ Out:
 Must（必須フィールド・PII 除外）/ Should（集約先・保持期間部分）
 
 ### Status
-candidate
+refined
 
-> 注記（保持期間部分の判断リミット）: 保持期間部分の AC は Q-006 (open) に依存し、確定までは「`wrangler tail` のリアルタイム閲覧のみ」を暫定とする。Q-006 が **Phase 2 入口** までに `answered` にならない場合は、**保持期間部分のみを `deferred` に切り出し、必須フィールド / PII 除外 / `wrangler tail` 集約部分は `candidate` のまま `refined` 候補として進める**（RC-021 と同パターン）。`deferred` への昇格は人間の確認のうえ実施する。Q-006 確定後に保持期間 AC を追記し、`deferred` 部分を再評価する。
+> Status 履歴: candidate (2026-05-03) → refined (2026-05-04, 個別確認で人間承認)
+> 注記（保持期間部分の判断リミット）: 保持期間部分の AC は Q-006 (open) に依存し、確定までは「`wrangler tail` のリアルタイム閲覧のみ」を暫定とする。Q-006 が **Phase 2 入口** までに `answered` にならない場合は、**保持期間部分のみを `deferred` に切り出し、必須フィールド / PII 除外 / `wrangler tail` 集約部分は `refined` のまま進める**（RC-021 と同パターン）。`deferred` への昇格は人間の確認のうえ実施する。Q-006 確定後に保持期間 AC を追記し、`deferred` 部分を再評価する。
 
 ---
 
