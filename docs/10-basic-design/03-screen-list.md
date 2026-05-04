@@ -139,16 +139,20 @@ flowchart LR
 
 ### SCR-004 投稿フォーム
 - 入力: タイトル / 本文 / visibility (`private` / `internal` / `public`) のラジオ / 倫理ガード 3 種チェック / PolicyAgreement 同意チェック
-- 送信: 「下書き保存」（status 遷移なし）/「提出」（API-002 を mutation 経由で呼ぶ）
+- 送信:
+  - 「下書き保存」（status 遷移なし）: 新規作成は **API-022 `createDraft`**、既存 draft の編集は **API-023 `updateDraft`** を mutation 経由で呼ぶ（B-4 採番）
+  - 「提出」: API-002 `submit` を mutation 経由で呼ぶ（draft 段階で本文保存済を前提とする）
 - 注意表示: 公開可能性、PII 入力禁止、ポリシーページ (SCR-012) リンク
 
 ### SCR-005 自分の投稿一覧
 - 全 8 ステータス一覧。各行に最新 status バッジと最終更新日時
 - データソース: API-012
+- 「新規作成」ボタン: クリックで **API-022 `createDraft`** を mutation 経由で呼び、空 draft を生成して SCR-004 に遷移（自身を author として確立、B-4）
 
 ### SCR-006 自分の投稿詳細
 - 自身の投稿の詳細 + 直近の判定 reason（returned / rejected の場合）+ 再提出導線（returned のときのみ表示、API-009 を mutation 経由で呼ぶ）
 - データソース: API-013
+- draft 状態のとき: 「draft 編集」ボタンで SCR-004 に遷移し、SCR-004 が **API-023 `updateDraft`** を mutation 経由で呼ぶ（B-4）
 
 ### SCR-007 ログイン
 - 入力: ユーザ識別子（許可リストから選択 or 入力）
@@ -180,7 +184,9 @@ flowchart LR
 ### SCR-013 公開操作画面
 - admin が approved 投稿を選んで「公開」、published 投稿を選んで「取り下げ」を実行
 - 取り下げは reason 入力欄（必須）
-- 送信: API-007 / API-008
+- 取得（loader）: **API-021 `getProposalForAdmin`** を呼び、admin が任意の proposal を全 visibility・全 status で取得する（B-1 採番、API-013 の「投稿者本人のみ」制約を回避するための専用 loader）
+- 送信: 公開は API-007 `publish` / 取り下げは API-008 `withdraw`
+- 表示項目: タイトル / 本文 / visibility / status / `submitted_at` / `approved_at`（MAJOR-3 で追加されたカラム）/ `published_at` / `withdrawn_at` / 直近 AuditLog 履歴抜粋
 
 ## 参照
 

@@ -130,8 +130,8 @@ flowchart TB
 ```
 
 > 凡例:
-> - **UC-013（認可境界）の対象**: すべての mutation 系 server function（API-002〜API-009）+ 機微取得系 loader 全件（API-011〜API-017）。**公開バイパス対象（API-018 ポリシー文書 / API-019 login / API-010 の guest 経路）は対象外**。
-> - **UC-014（AuditLog 書き込み）の対象**: 結果を変える 5 種・8 操作のみ（visibility 変更は RC-005 needs-clarification のため MVP 対象外）。loader（読み取り）と認可拒否時は AuditLog 記録なし。
+> - **UC-013（認可境界）の対象**: すべての mutation 系 server function（API-002〜API-009、および draft 系の API-022 / API-023）+ 機微取得系 loader 全件（API-011〜API-017、API-021 admin 用 loader）。**公開バイパス対象（API-018 ポリシー文書 / API-019 login / API-010 の guest 経路）は対象外**。
+> - **UC-014（AuditLog 書き込み）の対象**: 結果を変える 5 種・8 操作のみ（visibility 変更は RC-005 needs-clarification のため MVP 対象外）。loader（読み取り、API-021 を含む）と draft 系 mutation（API-022 / API-023）と認可拒否時は AuditLog 記録なし（BR-PROPOSAL-01 と整合）。
 
 ## ユースケース別の概要
 
@@ -163,7 +163,7 @@ flowchart TB
   - 必須項目不足 / 倫理ガード未確認 / PolicyAgreement 未同意 → `400 VALIDATION_ERROR`、status 遷移なし、AuditLog 記録なし
   - 投稿者本人ではない user / reviewer が他人の draft を提出 → `404`（暫定統一、UC-013）
   - 未ログイン → `401`（UC-013）
-- 関連 SCR / API: SCR-004, SCR-006 / API-002
+- 関連 SCR / API: SCR-004, SCR-005, SCR-006 / API-002 (submit), API-022 (createDraft, B-4), API-023 (updateDraft, B-4)
 - 参照: REQ-002, REQ-013
 
 ```mermaid
@@ -254,7 +254,7 @@ sequenceDiagram
 - 例外パス:
   - reviewer による呼び出し → `404`（暫定統一、BR-PUBLISH-01、admin 専権）
   - 未ログイン `401` / user / auditor → `404`（暫定統一）
-- 関連 SCR / API: SCR-013 / API-007
+- 関連 SCR / API: SCR-013 / API-007 (publish), API-021 (getProposalForAdmin, B-1: 公開前の本文・履歴確認)
 - 参照: REQ-004
 
 ### UC-008: 取り下げ（published → withdrawn）
@@ -270,7 +270,7 @@ sequenceDiagram
   - reason 空 → `400 VALIDATION_ERROR`
   - approved（未公開）からの取り下げ → `422 BUSINESS_RULE_VIOLATION`（withdrawn は published 経由のみ）
   - admin 以外 → 未ログイン `401` / ログイン済かつ権限不足 `404`（暫定統一）
-- 関連 SCR / API: SCR-013 / API-008
+- 関連 SCR / API: SCR-013 / API-008 (withdraw), API-021 (getProposalForAdmin, B-1: 取り下げ前の本文・公開期間確認)
 - 参照: REQ-005
 
 ### UC-009: 再提出（returned → submitted）
@@ -346,7 +346,7 @@ sequenceDiagram
   3. 拒否時に副作用（status 変更 / AuditLog 追記 / PolicyAgreement 生成）は一切発生しない
   4. 認可ヘルパーは UC-014 の AuditLog 書き込みより前に呼び出される（拒否時は AuditLog エントリは作られない）
   5. logger 側では拒否事由を `403_reason` フィールド（`not_owner` / `insufficient_role` / `not_authenticated` / `not_owner_resource` 等）に必ず記録する（NFR-007 と同期）。HTTP 404 で外部に隠蔽しつつ、内部観測（grep / E2E ログキャプチャ）では事由が判別可能とする二段構造。
-- 関連 API（横断的に参照される側、API-019 はログイン入口のため対象外）: API-002, API-003, API-004, API-005, API-006, API-007, API-008, API-009, API-010, API-011, API-012, API-013, API-014, API-015, API-016, API-017
+- 関連 API（横断的に参照される側、API-019 はログイン入口のため対象外）: API-002, API-003, API-004, API-005, API-006, API-007, API-008, API-009, API-010, API-011, API-012, API-013, API-014, API-015, API-016, API-017, API-021, API-022, API-023
 - 参照: REQ-010
 
 ### UC-014: AuditLog 書き込み（システム横断）

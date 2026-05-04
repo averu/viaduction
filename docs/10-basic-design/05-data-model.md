@@ -22,8 +22,8 @@ updated: 2026-05-04
 | --- | --- | --- | --- | --- |
 | DB-001 | users (既存サンプル) | ユーザ情報（本ドメインでは DB-006 を採用） | (登録系 API は別途設計) | API-001 |
 | DB-002 | sessions (既存サンプル) | セッション/トークン（本ドメインでは Cookie + 許可リストで代替） | API-001 | (取得系 API は別途設計) |
-| DB-003 | proposals | 提案本体（タイトル / 本文 / visibility / status / タイムスタンプ群） | API-002, API-003, API-004, API-005, API-006, API-007, API-008, API-009 | API-010, API-011, API-012, API-013, API-014, API-015, API-017 |
-| DB-004 | audit_logs | 監査ログエントリ（append-only） | API-002, API-003, API-004, API-005, API-006, API-007, API-008, API-009 | API-015, API-016, API-017 |
+| DB-003 | proposals | 提案本体（タイトル / 本文 / visibility / status / タイムスタンプ群） | API-002, API-003, API-004, API-005, API-006, API-007, API-008, API-009, API-022, API-023 | API-010, API-011, API-012, API-013, API-014, API-015, API-017, API-021 |
+| DB-004 | audit_logs | 監査ログエントリ（append-only） | API-002, API-003, API-004, API-005, API-006, API-007, API-008, API-009 | API-015, API-016, API-017, API-021 |
 | DB-005 | policy_agreements | プライバシーポリシー同意ログ | API-002 | (Phase 4 で詳細化) |
 | DB-006 | users | モック認証のユーザ識別子 + ロール（環境変数の許可リスト由来） | API-019 (read のみ、書き込みは環境変数管理) | API-002, API-019, 認可ヘルパー |
 
@@ -52,6 +52,7 @@ erDiagram
     timestamp created_at
     timestamp updated_at
     timestamp submitted_at "nullable, 直近 submit"
+    timestamp approved_at "nullable, in_review→approved 遷移時 (MAJOR-3)"
     timestamp published_at "nullable, publish 時"
     timestamp withdrawn_at "nullable, withdraw 時"
     integer lock_version "楽観ロック用 (BR-REVIEW-02)"
@@ -92,7 +93,29 @@ erDiagram
   - `submitted` 後は本文編集禁止（REQ-002）。再編集は `returned` 状態でのみ許可（REQ-006）
   - `withdrawn` 後は一般閲覧経路から本文非表示（REQ-005）。物理削除はしない
   - 楽観ロック: 同時担当化の競合解決のため `lock_version`（または equivalent）を持つ（BR-REVIEW-02、暫定）
-- **タイムスタンプ群**: `created_at` / `updated_at` / `submitted_at` / `published_at` / `withdrawn_at`。AuditLog から `(published_at, withdrawn_at)` のペアが抽出可能であること（REQ-005）
+- **タイムスタンプ群**: `created_at` / `updated_at` / `submitted_at` / `approved_at` / `published_at` / `withdrawn_at`。AuditLog から `(published_at, withdrawn_at)` のペアが抽出可能であること（REQ-005）
+
+#### 主要カラム表（DB-003 / MAJOR-3 反映）
+
+> 詳細な型・制約は Phase 4 詳細設計で確定する。本表は基本設計レベルの「カラムの存在 + 設定タイミング」を示す。
+
+| カラム名 | 型 | null | デフォルト | PK/FK/UK | 設定タイミング |
+| --- | --- | --- | --- | --- | --- |
+| `id` | string | no | — | PK | 新規作成時（UUID v7 / `crypto.randomUUID()`） |
+| `author_id` | string | no | — | FK → users.id | 新規作成時（呼び出し元 viewer の user_id、API-022 createDraft で server-side 設定） |
+| `title` | string | no | — | — | 新規作成時 / draft 編集時（API-022 / API-023） |
+| `body` | string | no | — | — | 同上 |
+| `visibility` | string | no | — | — | 新規作成時 / draft 編集時（API-022 / API-023） |
+| `status` | string | no | `'draft'` | — | 状態遷移時（API-002〜009 のうち status を変える操作） |
+| `created_at` | integer | no | now | — | 新規作成時 |
+| `updated_at` | integer | no | now | — | 任意の write 時に更新 |
+| `submitted_at` | integer | yes | NULL | — | submit (API-002) / resubmit (API-009) 時に現在時刻 |
+| **`approved_at`** | **integer** | **yes** | **NULL** | — | **in_review → approved 遷移時に現在時刻を設定（API-004 approve、MAJOR-3 で追加）** |
+| `published_at` | integer | yes | NULL | — | approved → published 遷移時（API-007 publish） |
+| `withdrawn_at` | integer | yes | NULL | — | published → withdrawn 遷移時（API-008 withdraw） |
+| `lock_version` | integer | no | 0 | — | 任意の write 時に +1（楽観ロック、BR-REVIEW-02、API-023 / API-003〜009 で expected_version と比較） |
+
+> **`approved_at` の追加理由（MAJOR-3）**: SCR-013 公開操作画面では「いつ approved になったか」を表示する要求があるが、従来は AuditLog (`action=approve` の `timestamp`) からの逆引きでのみ観測可能だった。読み込み経路の単純化のため DB-003 にも `approved_at` を直接保持する。AuditLog 経路（DB-004）と DB-003 の `approved_at` は同一の現在時刻で記録され、整合する。
 
 ### DB-004 audit_logs
 
@@ -157,7 +180,7 @@ erDiagram
 
 | エンティティ | export 関数（責務範囲） | export 禁止 |
 | --- | --- | --- |
-| `proposals` | 取得系: `findById` / `findByAuthor` / `listPublishedByVisibility` / `listForReview`、書き込み系: `create` / `updateStatus`（具体シグネチャは Phase 4） | — |
+| `proposals` | 取得系: `findById` / `findByAuthor` / `listPublishedByVisibility` / `listForReview` / `findByIdForAdmin`（admin 専用、API-021）、書き込み系: `create`（API-022 createDraft）/ `updateDraft`（API-023、status='draft' のみ）/ `updateStatus`（status 遷移）（具体シグネチャは Phase 4） | — |
 | `audit_logs` | **append + read のみ**: `append` / `findById` / `list` (filter 対応、`findByActor` / `findByAction` / `findByPeriod` の具体シグネチャは Phase 4 で確定) | **`update*` / `delete*` 命名は禁止**（NFR-004 / BR-AUDIT-02、CI grep `update*AuditLog` / `delete*AuditLog` パターンが 0 件であることを観測） |
 | `policy_agreements` | `create` / `findByProposalId` | `update`, `delete` |
 | `users` | `findById`（許可リスト参照） | `create` / `update` / `delete`（環境変数管理） |
