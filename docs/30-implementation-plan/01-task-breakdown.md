@@ -36,7 +36,7 @@ updated: 2026-05-05
 
 | ID | タイトル | 参照 | 出力 | 依存 | TEST | 見積 | 状態 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-002 | プロジェクト初期化（pnpm / TS / Vite / TanStack Start / Cloudflare plugin / Tailwind v4 / shadcn/ui） | BD-ARCH / NFR-002 | package.json / tsconfig.json / vite.config.ts / wrangler.jsonc / tailwind.config.ts / app/styles.css | (なし) | TEST-002 | 3h | ready |
+| TASK-002 | プロジェクト初期化（pnpm / TS / Vite / TanStack Start / Cloudflare plugin / Tailwind v4 / shadcn/ui） | BD-ARCH / NFR-002 | package.json / tsconfig.json / vite.config.ts / wrangler.jsonc / src/styles.css / src/components/ui/button.tsx | (なし) | TEST-002 | 3h | ready |
 | TASK-003 | ディレクトリ構成スケルトン作成 | BD-ARCH | src/{routes,components,lib,server/{auth,observability,audit,repositories,functions}} 各ディレクトリと index 雛形 | TASK-002 | TEST-003 | 1h | ready |
 | TASK-004 | 共通ドメイン型定義（Visibility / Status / Role / ErrorCode） | BD-ARCH / REQ-008 / REQ-010 / NFR-003 | src/lib/domain/types.ts | TASK-003 | TEST-004 | 2h | ready |
 | TASK-005 | モック認証セッション解決（cookie + 環境変数許可リスト） | API-019 / API-020 / DB-006 / REQ-015 / NFR-006 | src/server/auth/session.ts | TASK-004 | TEST-005 | 3h | ready |
@@ -124,16 +124,16 @@ updated: 2026-05-05
 - 完了条件:
   - [ ] `pnpm install` が成功する
   - [ ] `pnpm typecheck` が緑
-  - [ ] `vite.config.ts` の plugin 順序が BD-ARCH の公式推奨順（cloudflare → tanstackStart → react → tsconfigPaths）と一致
-  - [ ] `wrangler.jsonc` の `main` に `@tanstack/react-start/server-entry` が設定され、`compatibility_flags` に `nodejs_compat` を含めない
+  - [ ] `vite.config.ts` の plugin 順序が BD-ARCH の公式推奨順（cloudflare → tanstackStart → react → tsconfigPaths）と一致。補助 plugin の `@tailwindcss/vite` `@tanstack/devtools-vite` は末尾
+  - [ ] `wrangler.jsonc` の `main` に `@tanstack/react-start/server-entry` が設定され、`compatibility_flags` に **`nodejs_compat` を含む**（NFR-002 / Q-014 確定方針）
   - [ ] Tailwind v4 + shadcn/ui の最小コンポーネント（Button）が SSR で表示される
-- 出力ファイル: `package.json` / `pnpm-lock.yaml` / `tsconfig.json` / `vite.config.ts` / `wrangler.jsonc` / `tailwind.config.ts` / `src/styles.css` / `src/components/ui/button.tsx`
+- 出力ファイル: `package.json` / `pnpm-lock.yaml` / `tsconfig.json`（および `tsconfig.app.json` / `tsconfig.scripts.json` の project references）/ `vite.config.ts` / `vitest.config.ts` / `wrangler.jsonc` / `src/styles.css` / `src/components/ui/button.tsx` / `src/lib/utils.ts` / `src/router.tsx` / `src/routes/__root.tsx` / `src/routes/index.tsx` / `tests/integration/build.test.ts`
 - 影響範囲: 新規（プロジェクトルート全体）
 - 依存 TASK: (なし)
 - TEST: TEST-002
 - 見積: 3h
 - 状態: ready
-- 注意: GOAL-05 学習テーマ。Vite plugin 順序の理由を README に転記する（TASK-056）。`nodejs_compat` の最終判断は Q-014 / NFR-002 に従い「依存置換優先」を既定とする。
+- 注意: GOAL-05 学習テーマ。Vite plugin 順序の理由を README に転記する（TASK-056）。`nodejs_compat` は NFR-002 / Q-014 確定（2026-05-05）で **常時有効**。Tailwind v4 採用のため `tailwind.config.ts` は **作成しない**（zero-config）。Cloudflare 公式 scaffold は `pnpm dlx @tanstack/cli@latest create --framework React --deployment cloudflare` を使う（`pnpm create cloudflare@latest --framework=tanstack-start` は v2.68 時点で壊れている）。
 
 ### TASK-003 — ディレクトリ構成スケルトン
 - 参照: BD-ARCH

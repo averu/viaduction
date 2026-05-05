@@ -94,7 +94,7 @@ flowchart LR
 | 論点 | 候補 | 決定者 | 期限 | 関連 Q / NFR |
 | --- | --- | --- | --- | --- |
 | データストア (MVP / 永続) | A: in-memory のみ → 後で D1 移行 / B: 最初から D1 / C: KV + D1 ハイブリッド | プロダクトオーナー | Phase 3 確定 | Q-005, NFR-002 |
-| `nodejs_compat` 有効化 | A: 既定で無効、依存置換を優先 / B: 必要が出たら ADR で個別有効化 / C: 既定で有効化 | プロダクトオーナー | Phase 3 確定（Q-014） | NFR-002 |
+| ~~`nodejs_compat` 有効化~~ (確定 2026-05-05) | **C: 既定で有効化** に決定。理由: `@tanstack/router-core` が `node:stream` を直接 import、依存置換不可。詳細は本ドキュメント §"`nodejs_compat` の使用判断" 参照 | — | — | NFR-002 |
 | バリデーションライブラリ | A: Zod / B: Valibot / C: 自作型ガード | 開発リード（Claude） | Phase 4 入口 | NFR-002（Workers 互換性） |
 | CSRF 実装 | A: `SameSite=Lax` + Origin / Sec-Fetch-Site 検証のみ / B: CSRF トークン併用 | プロダクトオーナー | Phase 3 確定 | NFR-006 |
 | CSP の最終ヘッダ値 | A: `default-src 'self'; script-src 'self'; object-src 'none'` 最小 / B: nonce ベース | 開発リード | Phase 3 確定 | NFR-006 |
@@ -114,6 +114,13 @@ flowchart LR
 3. `@vitejs/plugin-react` — React JSX 変換、Fast Refresh
 4. `vite-tsconfig-paths` — `tsconfig.json` の `paths` を Vite resolver に橋渡し（最後でよい）
 
+補助 plugin（4 の後ろに置く）：
+
+5. `@tailwindcss/vite` — Tailwind v4 用。zero-config なので `tailwind.config.ts` は不要
+6. `@tanstack/devtools-vite` — TanStack Devtools の DevServer 連携（dev のみ）
+
+これらは「ランタイム / フレームワーク変換に関与しない補助系」のため最後尾。`@tailwindcss/vite` と `@tanstack/devtools-vite` の相対順序は本プロジェクトでは未確定だが、現行 scaffold 既定（tailwindcss → devtools）に合わせる。
+
 ### `vite.config.ts` スケルトン
 
 ```ts
@@ -123,18 +130,22 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
+import tailwindcss from "@tailwindcss/vite";
+import { devtools } from "@tanstack/devtools-vite";
 
 export default defineConfig({
   plugins: [
-    cloudflare(),       // 1. Workers ランタイム互換変換は最初
+    cloudflare({ viteEnvironment: { name: "ssr" } }),  // 1. Workers ランタイム互換変換は最初
     tanstackStart(),    // 2. TanStack Start のコード生成
     react(),            // 3. React の JSX / Fast Refresh
     tsconfigPaths(),    // 4. paths 解決
+    tailwindcss(),      // 5. Tailwind v4（補助）
+    devtools(),         // 6. TanStack Devtools（dev 用、補助）
   ],
 });
 ```
 
-> 注意: 上記の plugin 関数名は実際のパッケージ仕様に合わせて調整する。順序の原則のみが本ドキュメントの決定事項。
+> 注意: 上記の plugin 関数名は実際のパッケージ仕様に合わせて調整する。順序の原則（1〜4 の優先順位、補助 plugin は末尾）のみが本ドキュメントの決定事項。
 
 ## `wrangler.jsonc` の設計
 
@@ -146,12 +157,13 @@ Cloudflare Workers のデプロイ設定。本プロジェクトでは以下の�
   "name": "viaduction",
 
   // Workers ランタイムの互換日付。新機能の有効化境界。
-  // 本プロジェクトでは MVP 着手時点の最新安定日付を採用（Phase 3 で確定）。
+  // 本プロジェクトでは MVP 着手時点の最新安定日付を採用。
   "compatibility_date": "2026-05-04",
 
-  // 互換性フラグ。`nodejs_compat` の扱いは Q-014 で確定（暫定: 有効化しない）。
+  // 互換性フラグ。`@tanstack/router-core` が `node:stream` を直接 import するため
+  // `nodejs_compat` を常時有効（NFR-002 / Q-014 確定 2026-05-05）。
   "compatibility_flags": [
-    // "nodejs_compat" // ← Q-014 確定までコメントアウト。NFR-002 で「依存置換優先」を暫定既定に
+    "nodejs_compat"
   ],
 
   // SSR エントリポイント。TanStack Start のサーバ実装を Workers の handler として登録する。
@@ -186,22 +198,25 @@ Cloudflare Workers のデプロイ設定。本プロジェクトでは以下の�
 
 - **`name`**: Workers アプリの名前（ダッシュボード上の識別子、`<name>.<account>.workers.dev` のサブドメイン）。env ごとに別アプリ扱いにすると分離が明確。
 - **`compatibility_date`**: Workers ランタイムの互換境界。新しい Web 標準の有効化日付。古いまま放置するとセキュリティ更新を取り逃す。プロジェクトに対して **計画的に** 引き上げる。
-- **`compatibility_flags`**: 個別の互換性切替。代表は `nodejs_compat`（Node 互換性レイヤ）。本プロジェクトでは原則使わず、必要なら ADR を起票（NFR-002 / Q-014）。
+- **`compatibility_flags`**: 個別の互換性切替。代表は `nodejs_compat`（Node 互換性レイヤ）。本プロジェクトでは TanStack Start v1 + `@cloudflare/vite-plugin` 採用に伴い `nodejs_compat` を **常時有効**（NFR-002 / Q-014 確定）。アプリケーションコードからの Node 専用 API 直接利用は引き続き禁止。
 - **`main`**: Workers の handler エントリ。TanStack Start を採用するため `@tanstack/react-start/server-entry` を指定し、TanStack Start の SSR ハンドラを Workers の `fetch` イベントの入口として登録する（これにより Vite ビルド成果物が直接 Workers 上で SSR を走らせる）。
   - **公式パターンの参照と ADR 起票要（M-16）**: TanStack Start v1 + `@cloudflare/vite-plugin` の組み合わせで Workers 上に SSR をデプロイする際の `main` の指定方法は、両プロジェクトの公式ドキュメントと GitHub Issues の最新の合意で確定する。本ドキュメントの値（`@tanstack/react-start/server-entry`）は **暫定** であり、実装担当者は Phase 4 / Phase 5 で公式手順（TanStack Start v1 リリースノート + `@cloudflare/vite-plugin` README + Cloudflare Workers の Vite SSR ガイド）と整合することを **ADR で確認** すべき。`main` の実値が公式手順と異なる場合は ADR にその経緯を記載し、本ドキュメントを更新する。
 - **`vars`**: 公開設定（環境名、フラグなど）。クライアント JS には露出しないが、ソースコードから env として参照可能。**機密は置かない**。
 - **`secrets`** (`wrangler secret put` で投入): 機密設定（`AUTH_ALLOWLIST`、外部 API キーなど）。`wrangler.jsonc` には書かない。
 - **`bindings`**: KV / D1 / R2 / Durable Objects などのリソース参照。env 経由でハンドラ内部から呼ぶ。MVP の in-memory 実装では未使用、Phase 3 で Q-005 確定後に追記。
 
-### `nodejs_compat` の使用判断
+### `nodejs_compat` の使用判断（確定: 2026-05-05）
 
-- **使う場合**:
-  - Node 専用 API（`crypto.randomUUID` の Node 実装、`Buffer`、`stream` 等）に依存するライブラリが必須かつ Workers 互換版への置換が困難なとき
-  - 採用時は ADR を起票し、依存ライブラリ名・採用理由・代替検討の経緯を記録（NFR-002 の AC「依存置換と `nodejs_compat` 有効化を比較し ADR を残す」と整合）
-- **使わない場合（推奨、MVP 既定方針）**:
-  - Workers 互換ライブラリで代替可能な限り、`nodejs_compat` には頼らない
+- **方針**: `compatibility_flags: ["nodejs_compat"]` を **常時有効**。Q-014 を「C: 既定で有効化」で確定。
+- **確定理由**:
+  - `@tanstack/router-core` が `node:stream` および `node:stream/web` を直接 import している（公式パッケージ内部のため依存置換不可）
+  - `@cloudflare/vite-plugin` v1.35 の dev サーバが `nodejs_compat` 無しで起動拒否し、`pnpm dev` / `wrangler deploy --dry-run` の双方が失敗する
+  - したがって、TanStack Start v1 + `@cloudflare/vite-plugin` を採用する限りこのフラグは技術的前提
+- **アプリケーション層の制約は維持**:
+  - `src/` 配下のアプリ実装からは Node 専用 API（`Buffer` / `node:fs` / `node:crypto` の Node 版 等）を **直接 import しない**
   - 例: UUID 生成は `crypto.randomUUID()`（Web Crypto, Workers ネイティブ対応）、ハッシュは `crypto.subtle`、JSON は標準
-- Q-014 で人間判断待ちのため、本ドキュメントは「依存置換優先」を暫定既定として記述し、確定後に `compatibility_flags` のコメントを更新する
+  - フラグは「フレームワーク内部の Node API 利用を許容するための互換層」であり、アプリ層の実装スタイルには影響しない
+- **将来 TanStack Start / `@cloudflare/vite-plugin` が `nodejs_compat` 不要になった場合**: ADR を起票して再判断する
 
 ## ランタイム境界とディレクトリ構成
 
