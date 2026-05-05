@@ -19,6 +19,8 @@ export default defineConfig({
     viteReact(),
     tsconfigPaths(),
     tailwindcss(),
-    devtools(),
+    // injectSource を切らないと SSR と client の data-tsd-source 行番号が
+    // ファイル編集のたびに食い違って hydration mismatch を起こす（dev 限定）。
+    devtools({ injectSource: { enabled: false } }),
   ],
 })
