@@ -13,7 +13,7 @@ updated: 2026-05-04
 > **承認ルール**:
 > - `### Status` を `approved` にできるのは **人間のみ**。
 > - `### Acceptance Criteria` が空のまま `approved` にしてはならない（バリデーションで error）。
-> - `### Open Questions` が残ったまま `approved` にしてはならない（バリデーションで error）。
+> - `### Provisional Decisions` が残ったまま `approved` にしてはならない（バリデーションで error）。
 
 ## REQ 雛形
 
@@ -56,7 +56,7 @@ updated: 2026-05-04
 > - DB-XXX
 > - TEST-XXX
 >
-> ### Open Questions
+> ### Provisional Decisions
 > - (未解決があれば。空なら approved 可)
 >
 > ### Status
@@ -106,7 +106,7 @@ Out:
 - DB-001
 - DB-002
 
-### Open Questions
+### Provisional Decisions
 - (なし)
 
 ### Status
@@ -166,12 +166,12 @@ Out:
 - PROB-001, PROB-002
 - 暫定回答に依拠する Q-XXX: Q-001（モック認証）, Q-007（internal はログインユーザ全員）
 
-### Open Questions
+### Provisional Decisions
 - Q-008: PolicyAgreement のバージョニング規約
 - Q-019: 提出 (submit) 時の reason テキスト必須要否（暫定: 任意）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -227,13 +227,13 @@ Out:
 - IDEA-002
 - PROB-001, PROB-003
 
-### Open Questions
+### Provisional Decisions
 - Q-004: レビュー所要時間 SLA の数値
 - 担当者アサイン概念の有無（Phase 2 末で再確認）
 - 同時担当化の競合解決方針の最終仕様（Phase 3 で確定）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -288,11 +288,11 @@ Out:
 - 暫定回答に依拠する Q-XXX: Q-007（internal はログインユーザ全員）
 - 関連 GOAL: GOAL-04
 
-### Open Questions
+### Provisional Decisions
 - approved → published を「approve と同時」とするか「明示的な公開操作」とするかの最終確定（AMB-009、本要件は別操作前提で起草）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -344,11 +344,11 @@ Out:
 - PROB-001
 - 暫定回答に依拠する Q-XXX: Q-003（公開記録を残す / 本文非表示 + AuditLog 保持）
 
-### Open Questions
+### Provisional Decisions
 - AMB-010: 投稿者本人による取り下げを許すか / 許す場合の条件
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -400,12 +400,12 @@ Out:
 - PROB-001
 - 暫定回答に依拠する Q-XXX: Q-011（同じ proposal id で再提出）, Q-018（再取得しない暫定）
 
-### Open Questions
+### Provisional Decisions
 - Q-018: 再提出時の倫理ガード再確認 / PolicyAgreement 再取得の要否
 - 差し戻し回数の上限を設けるか（Phase 2 末で確定）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -452,11 +452,11 @@ Out:
 - PROB-001
 - 暫定回答に依拠する Q-XXX: Q-001（モック認証下でもユーザ識別子は持つ）
 
-### Open Questions
+### Provisional Decisions
 - ステータス別フィルタの必要性（Phase 3 で再評価）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -509,13 +509,13 @@ Out:
 - PROB-005, PROB-006
 - 暫定回答に依拠する Q-XXX: Q-007（internal はログインユーザ全員）, Q-016（private は reviewer / auditor から非表示）
 
-### Open Questions
+### Provisional Decisions
 - Q-016: auditor / reviewer の private 投稿本文到達可否
 - ページネーション・並び順の規約（Phase 3 で確定）
 - 検索機能の有無（MVP 非対象想定だが要確認）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -562,13 +562,13 @@ Out:
 - IDEA-002
 - PROB-001
 
-### Open Questions
+### Provisional Decisions
 - Q-016: reviewer の private 投稿閲覧可否
 - フィルタ条件（カテゴリ・経過時間）の有無（Phase 3 で確定）
 - 並び順（提出順 / 経過時間順）の既定（Phase 2 で確定）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -629,13 +629,13 @@ Out:
 - PROB-005
 - 関連 GOAL: GOAL-03
 
-### Open Questions
+### Provisional Decisions
 - 1 ユーザの複数ロール兼任時の合成ルール（暫定 OR 合成、Phase 2 で確定）
 - 投稿者本人と admin の能力境界（自分の private 投稿の admin による閲覧可否）（AMB-011）
 - Q-016: auditor の本文到達可否
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -691,13 +691,13 @@ Out:
 - PROB-003, PROB-004
 - 関連 GOAL: GOAL-02
 
-### Open Questions
+### Provisional Decisions
 - Q-019: 提出 (submit) の reason 必須要否（暫定: 任意）
 - 認可失敗試行を AuditLog に記録するか（Phase 2 で確定）
 - AMB-012: reason テキストへの PII 混入抑止の仕組み（Phase 2 で別 REQ 化を検討）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -755,14 +755,14 @@ Out:
 - PROB-004
 - 暫定回答に依拠する Q-XXX: Q-009（AuditLog 全体を一覧可能）
 
-### Open Questions
+### Provisional Decisions
 - Q-006: AuditLog の保持期間と削除ポリシー
 - Q-012: フィルタ条件（actor / action / 期間）の必要性
 - Q-016: auditor の投稿本文到達可否
 - AuditLog エクスポートのスコープ（Phase 2 で再評価）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -819,12 +819,12 @@ Out:
 - 関連 GOAL: GOAL-01
 - 暫定回答に依拠する Q-XXX: Q-018（再取得しない暫定）
 
-### Open Questions
+### Provisional Decisions
 - Q-008: policy_version の形式とバージョン管理規約
 - Q-018: returned 再提出時の再確認要否
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -868,12 +868,12 @@ Out:
 - RC-015
 - IDEA-006
 
-### Open Questions
+### Provisional Decisions
 - Q-008: policy_version の形式とバージョニング規約
 - ポリシー文書の管理方式（リポジトリ内 Markdown / DB / CMS）（Phase 2-3 で確定）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -926,13 +926,13 @@ Out:
 - 関連 GOAL: GOAL-05, GOAL-06
 - 暫定回答に依拠する Q-XXX: Q-001（モック認証）
 
-### Open Questions
+### Provisional Decisions
 - ログイン UI の最小構成（Phase 3 で確定）
 - 許可リスト外 cookie の扱いの最終仕様（401 vs guest フォールバック、Phase 3 で確定）
 - AMB-008: ユーザ識別子の PII 性（暫定: 不透明 ID は PII 非該当）
 
 ### Status
-candidate
+approved
 
 ## 参照
 

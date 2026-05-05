@@ -34,7 +34,7 @@ updated: 2026-05-04
 > - REQ-XXX
 > - 関連する設計上のキーワード（認証、ログ、暗号化など）
 >
-> ### Open Questions
+> ### Provisional Decisions
 > - (未解決があれば)
 >
 > ### Status
@@ -71,7 +71,7 @@ updated: 2026-05-04
 - REQ-001
 - DB-001
 
-### Open Questions
+### Provisional Decisions
 - (なし)
 
 ### Status
@@ -87,7 +87,7 @@ approved
 運用 / 基盤
 
 ### Target Value
-server function 実装および採用ライブラリは Cloudflare Workers 互換でなければならない。Node 専用 API（`node:fs` / `node:fs/promises` / `Buffer` の Node 専用形 / `crypto` の Node 版・`require('crypto')` 等）に依存しない。`nodejs_compat` 有効化の最終判断は Phase 3（Q-014 確定後）。MVP 既定方針は「依存置換を優先し `nodejs_compat` には頼らない」。
+server function 実装および採用ライブラリは Cloudflare Workers 互換でなければならない。Node 専用 API（`node:fs` / `node:fs/promises` / `Buffer` の Node 専用形 / `crypto` の Node 版・`require('crypto')` 等）にはアプリケーションコードから直接依存しない。`compatibility_flags` には `nodejs_compat` を **常時有効** とする（Q-014 確定: 2026-05-05）。理由は `@tanstack/router-core` が `node:stream` / `node:stream/web` を直接 import しており、TanStack Start v1 + `@cloudflare/vite-plugin` の組み合わせでは依存置換が技術的に不可能なため。アプリケーション層では引き続き Node 専用 API を直接使わない方針を保つ。
 
 ### Measurement
 - ローカル: `pnpm dev` または `wrangler dev` でエラーなくサーバが起動し、ヘルスエンドポイントが 200 を返す
@@ -109,9 +109,12 @@ server function 実装および採用ライブラリは Cloudflare Workers 互�
 - Given CI で静的解析（`grep -R` ベースでも可）を実行する
   When `src/` 以下の import 文を検査する
   Then Node 専用 API が検出されないこと（許可される `node:` import は Phase 3 で許可リスト化）
-- Given Node 専用 API が必要になった
-  When 依存置換と `nodejs_compat` 有効化を比較する
-  Then ADR を起票し、暫定既定の「依存置換優先」を上書きする場合は理由を明示する
+- Given アプリケーションコード（`src/server/**` および `src/**` のうちアプリ層）が Node 専用 API に直接依存している
+  When CI 静的解析でその import を検出する
+  Then 失敗扱いとし、Workers 互換 API（`crypto.subtle` / Web Streams 等）への置換または ADR 起票による例外承認を要求する
+- Given `wrangler.jsonc` の `compatibility_flags` を確認する
+  When 設定値を読む
+  Then `nodejs_compat` が含まれていること（TanStack Start v1 + `@cloudflare/vite-plugin` 採用継続中の必須条件）
 
 ### Related Items
 - RC-017
@@ -120,12 +123,12 @@ server function 実装および採用ライブラリは Cloudflare Workers 互�
 - IDEA-007
 - PROB-005
 
-### Open Questions
-- Q-014: `nodejs_compat` 有効化方針（暫定: 依存置換優先）
+### Provisional Decisions
+- Q-014: `nodejs_compat` 有効化方針 → **確定（2026-05-05）: 常時有効**。`@tanstack/router-core` が `node:stream` を直接 import するため依存置換不可、`@cloudflare/vite-plugin` v1.35 の dev サーバ起動条件としても必須。アプリケーション層は引き続き Workers 互換 API のみを使う方針を維持する。
 - 静的解析の許可リスト形式（Phase 3 で確定）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -170,13 +173,13 @@ candidate
 - IDEA-004
 - PROB-005
 
-### Open Questions
+### Provisional Decisions
 - 認可ヘルパーの API（関数名 / 戻り値型）（Phase 3 で確定）
 - 「機微取得系 loader」の最終定義（Phase 2 で REQ 化時に確定、本要件は暫定線引き）
 - Q-016: auditor 閲覧粒度（Q-009 / Q-016 確定承認待ち）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -223,13 +226,13 @@ AuditLog ストアは、書き込み（append）以外の操作（更新・削�
 - IDEA-005
 - PROB-004
 
-### Open Questions
+### Provisional Decisions
 - データ層強制の具体手段（D1 のトリガ / 別ストア / 別アカウント分離 等）（Phase 3 で確定）
 - Q-006: 保持期間と物理削除運用
 - 静的解析の grep パターン許可リスト（Phase 3 で確定）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -277,13 +280,13 @@ candidate
 - IDEA-005
 - PROB-002, PROB-004
 
-### Open Questions
+### Provisional Decisions
 - Q-015: 開発環境での詳細ログ出力可否
 - AMB-008: ユーザ識別子の PII 性（暫定: 不透明 ID は PII 非該当、`user_id_hash` のみ出力）
 - 許可フィールドリストの最終確定（Phase 3）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -331,13 +334,13 @@ candidate
 - IDEA-004
 - PROB-005
 
-### Open Questions
+### Provisional Decisions
 - CSRF の具体実装（Origin 検証 vs CSRF トークン）（Phase 3 で確定）
 - Cookie SameSite と CSRF 対策のいずれを最低線とするか（暫定: `SameSite=Lax` + Origin 検証）
 - CSP の最終ヘッダ値（Phase 3 で確定）
 
 ### Status
-candidate
+approved
 
 ---
 
@@ -385,13 +388,13 @@ candidate
 - 関連 GOAL: GOAL-01, GOAL-02
 - PROB-004
 
-### Open Questions
+### Provisional Decisions
 - Q-006: AuditLog および運用ログの保持期間（保持期間部分は `deferred` 切り出し検討）
 - 必須フィールドの最終リスト（Phase 3 で確定）
 - 長期保存先（Logpush / R2 / 外部 SaaS）の選定（Phase 3 以降）
 
 ### Status
-candidate
+approved
 
 ## 参照
 
