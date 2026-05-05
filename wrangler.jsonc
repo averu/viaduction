@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "viaduction",
+  "compatibility_date": "2025-09-02",
+  // NFR-002 / Q-014（確定 2026-05-05）: TanStack Start v1 + @cloudflare/vite-plugin が
+  // node:stream を必須とするため nodejs_compat を常時有効とする
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@tanstack/react-start/server-entry"
+}
